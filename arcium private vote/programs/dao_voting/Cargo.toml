@@ -1,0 +1,21 @@
+     1|[package]
+     2|name = "dao-voting"
+     3|version = "0.1.0"
+     4|description = "Private DAO Voting — Arcium MXE encrypted vote tallying on Solana"
+     5|edition = "2021"
+     6|
+     7|[lib]
+     8|crate-type = ["cdylib", "lib"]
+     9|name = "dao_voting"
+    10|
+    11|[features]
+    12|no-entrypoint = []
+    13|no-idl = []
+    14|no-log-ix-name = []
+    15|cpi = ["no-entrypoint"]
+    16|default = []
+    17|
+    18|[dependencies]
+    19|anchor-lang = { version = "0.30.1", features = ["init-if-needed"] }
+    20|arcium-anchor = { version = "0.3.0", features = ["cpi"] }
+    21|

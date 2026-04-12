@@ -1,0 +1,162 @@
+     1|@import "tailwindcss";
+     2|
+     3|/* Dark theme by default */
+     4|:root {
+     5|	color-scheme: dark;
+     6|
+     7|	/* Theme colors - DAO Voting dark navy */
+     8|	--background: #0a0e1a;
+     9|	--foreground: hsl(200 10% 95%);
+    10|	--card: hsl(230 20% 10%);
+    11|	--card-foreground: hsl(200 10% 95%);
+    12|	--primary: #7c3aed;
+    13|	--primary-foreground: hsl(0 0% 100%);
+    14|	--secondary: #06b6d4;
+    15|	--secondary-foreground: hsl(0 0% 100%);
+    16|	--muted: hsl(230 20% 14%);
+    17|	--muted-foreground: hsl(220 10% 55%);
+    18|	--accent: #7c3aed;
+    19|	--accent-foreground: hsl(0 0% 100%);
+    20|	--destructive: hsl(0 70% 50%);
+    21|	--destructive-foreground: hsl(0 0% 98%);
+    22|	--border: rgba(255,255,255,0.08);
+    23|	--input: hsl(230 20% 12%);
+    24|	--ring: #7c3aed;
+    25|	--radius: 0.75rem;
+    26|}
+    27|
+    28|/* Tailwind v4 Theme - Maps CSS vars to utility classes */
+    29|@theme inline {
+    30|	--color-background: var(--background);
+    31|	--color-foreground: var(--foreground);
+    32|	--color-card: var(--card);
+    33|	--color-card-foreground: var(--card-foreground);
+    34|	--color-primary: var(--primary);
+    35|	--color-primary-foreground: var(--primary-foreground);
+    36|	--color-secondary: var(--secondary);
+    37|	--color-secondary-foreground: var(--secondary-foreground);
+    38|	--color-muted: var(--muted);
+    39|	--color-muted-foreground: var(--muted-foreground);
+    40|	--color-accent: var(--accent);
+    41|	--color-accent-foreground: var(--accent-foreground);
+    42|	--color-destructive: var(--destructive);
+    43|	--color-destructive-foreground: var(--destructive-foreground);
+    44|	--color-border: var(--border);
+    45|	--color-input: var(--input);
+    46|	--color-ring: var(--ring);
+    47|
+    48|	--radius-sm: calc(var(--radius) - 2px);
+    49|	--radius-md: var(--radius);
+    50|	--radius-lg: calc(var(--radius) + 2px);
+    51|
+    52|	--font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    53|	--font-mono: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+    54|}
+    55|
+    56|/* Base styles */
+    57|@layer base {
+    58|	* {
+    59|		border-color: var(--border);
+    60|	}
+    61|
+    62|	body {
+    63|		margin: 0;
+    64|		background-color: var(--background);
+    65|		color: var(--foreground);
+    66|		font-family: var(--font-sans);
+    67|		-webkit-font-smoothing: antialiased;
+    68|		-moz-osx-font-smoothing: grayscale;
+    69|	}
+    70|
+    71|	code {
+    72|		font-family: var(--font-mono);
+    73|	}
+    74|}
+    75|
+    76|/* Grid background pattern */
+    77|.grid-bg {
+    78|	background-image:
+    79|		linear-gradient(rgba(124, 58, 237, 0.05) 1px, transparent 1px),
+    80|		linear-gradient(90deg, rgba(124, 58, 237, 0.05) 1px, transparent 1px);
+    81|	background-size: 40px 40px;
+    82|}
+    83|
+    84|/* Animations */
+    85|@keyframes spin-slow {
+    86|	from { transform: rotate(0deg); }
+    87|	to { transform: rotate(360deg); }
+    88|}
+    89|
+    90|@keyframes pulse-glow {
+    91|	0%, 100% { box-shadow: 0 0 0 0 rgba(124, 58, 237, 0.4); }
+    92|	50% { box-shadow: 0 0 0 12px rgba(124, 58, 237, 0); }
+    93|}
+    94|
+    95|@keyframes bar-fill {
+    96|	from { width: 0%; }
+    97|	to { width: var(--bar-width); }
+    98|}
+    99|
+   100|@keyframes fade-in-up {
+   101|	from { opacity: 0; transform: translateY(16px); }
+   102|	to { opacity: 1; transform: translateY(0); }
+   103|}
+   104|
+   105|@keyframes fade-in {
+   106|	from { opacity: 0; }
+   107|	to { opacity: 1; }
+   108|}
+   109|
+   110|@keyframes check-pop {
+   111|	0% { transform: scale(0); opacity: 0; }
+   112|	60% { transform: scale(1.2); opacity: 1; }
+   113|	100% { transform: scale(1); opacity: 1; }
+   114|}
+   115|
+   116|@keyframes chain-pulse {
+   117|	0%, 100% { opacity: 1; transform: scale(1); }
+   118|	50% { opacity: 0.5; transform: scale(0.95); }
+   119|}
+   120|
+   121|@keyframes float {
+   122|	0%, 100% { transform: translateY(0px); }
+   123|	50% { transform: translateY(-8px); }
+   124|}
+   125|
+   126|.animate-spin-slow { animation: spin-slow 2s linear infinite; }
+   127|.animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+   128|.animate-fade-in-up { animation: fade-in-up 0.5s ease-out forwards; }
+   129|.animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
+   130|.animate-check-pop { animation: check-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+   131|.animate-chain-pulse { animation: chain-pulse 1s ease-in-out infinite; }
+   132|.animate-float { animation: float 3s ease-in-out infinite; }
+   133|
+   134|/* Glassmorphism */
+   135|.glass {
+   136|	background: rgba(255, 255, 255, 0.04);
+   137|	backdrop-filter: blur(12px);
+   138|	-webkit-backdrop-filter: blur(12px);
+   139|	border: 1px solid rgba(255, 255, 255, 0.08);
+   140|}
+   141|
+   142|.glass-hover:hover {
+   143|	background: rgba(255, 255, 255, 0.07);
+   144|	border-color: rgba(124, 58, 237, 0.3);
+   145|	transition: all 0.2s ease;
+   146|}
+   147|
+   148|/* Purple glow effect */
+   149|.purple-glow {
+   150|	box-shadow: 0 0 20px rgba(124, 58, 237, 0.3), 0 0 40px rgba(124, 58, 237, 0.1);
+   151|}
+   152|
+   153|.cyan-glow {
+   154|	box-shadow: 0 0 20px rgba(6, 182, 212, 0.3), 0 0 40px rgba(6, 182, 212, 0.1);
+   155|}
+   156|
+   157|/* Scrollbar */
+   158|::-webkit-scrollbar { width: 6px; }
+   159|::-webkit-scrollbar-track { background: #0a0e1a; }
+   160|::-webkit-scrollbar-thumb { background: rgba(124, 58, 237, 0.4); border-radius: 3px; }
+   161|::-webkit-scrollbar-thumb:hover { background: rgba(124, 58, 237, 0.7); }
+   162|

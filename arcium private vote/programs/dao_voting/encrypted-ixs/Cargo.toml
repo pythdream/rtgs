@@ -1,0 +1,19 @@
+     1|[package]
+     2|name = "dao-voting-encrypted-ixs"
+     3|version = "0.1.0"
+     4|description = "Arcium MXE encrypted circuit definitions for DAO private voting"
+     5|edition = "2021"
+     6|
+     7|[lib]
+     8|crate-type = ["cdylib", "lib"]
+     9|name = "dao_voting_encrypted_ixs"
+    10|
+    11|[features]
+    12|default = []
+    13|
+    14|[dependencies]
+    15|# Arcium MXE SDK — provides the encrypted computation primitives
+    16|arcium-mxe = { version = "0.3.0" }
+    17|# Arcium circuit macros — #[mxe_circuit], Enc<T>, etc.
+    18|arcium-macros = { version = "0.3.0" }
+    19|
