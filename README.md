@@ -7,12 +7,8 @@
 - Uses Arcium's MPC technology for confidentiality
 
 ### Tech Stack
+- Nullshot.ai (MCP framework)
 - TypeScript / Rust (Anchor program)
 - Deployed on Solana + Arcium
-
-### Quick Start
-1. Clone the repo
-2. Run `npm install`
-3. Run `nullshot dev` (or follow wrangler.toml for deployment)
 
 Made for Arcium Retroactive Token Grants (RTG) .
