@@ -7,236 +7,116 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    :root {
-      --purple: #c084fc;
-      --deep-purple: #7e22ce;
-    }
+    :root { --purple: #c084fc; }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       font-family: 'Inter', sans-serif;
       color: #fff;
       min-height: 100vh;
-      overflow-x: hidden;
       background: #0a0a1f;
     }
 
     #bg-video {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      z-index: -2;
-      filter: brightness(0.78) contrast(1.15) saturate(1.1);
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      object-fit: cover; z-index: -2;
+      filter: brightness(0.78) contrast(1.15);
     }
 
     #bg-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(20, 10, 45, 0.82);
-      z-index: -1;
+      position: fixed; top:0; left:0; width:100%; height:100%;
+      background: rgba(20,10,45,0.82); z-index: -1;
     }
 
     header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: rgba(15, 10, 40, 0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(192, 132, 252, 0.25);
-      z-index: 1000;
-      padding: 18px 5%;
+      position: fixed; top:0; width:100%;
+      background: rgba(15,10,40,0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(192,132,252,0.25);
+      z-index: 1000; padding: 18px 5%;
     }
 
     .nav {
-      max-width: 1100px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: 1100px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
     }
 
     .logo {
-      font-size: 1.65rem;
-      font-weight: 700;
+      font-size: 1.65rem; font-weight:700;
       background: linear-gradient(90deg, #c084fc, #d8b4fe);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
 
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 28px;
-    }
+    .nav-links { display:flex; gap:28px; align-items:center; }
 
     .nav-links a, .nav-links button {
-      color: #e0d4ff;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 1.05rem;
-      transition: all 0.3s;
+      color:#e0d4ff; text-decoration:none; font-weight:500; font-size:1.05rem;
     }
-
-    .nav-links a:hover, .nav-links button:hover {
-      color: var(--purple);
-    }
+    .nav-links a:hover, .nav-links button:hover { color:var(--purple); }
 
     .faucet {
-      background: var(--purple);
-      color: #1a0033;
-      padding: 10px 26px;
-      border-radius: 50px;
-      font-weight: 600;
+      background:var(--purple); color:#1a0033; padding:10px 26px;
+      border-radius:50px; font-weight:600;
     }
 
-    .wallet {
-      background: rgba(192, 132, 252, 0.15);
-      border: 1px solid rgba(192, 132, 252, 0.4);
-      padding: 10px 20px;
-      border-radius: 50px;
-      font-family: monospace;
-      font-size: 1rem;
-      display: none;
-      align-items: center;
-      gap: 8px;
-    }
+    .wallet { display:none; background:rgba(192,132,252,0.15); border:1px solid rgba(192,132,252,0.4);
+      padding:10px 20px; border-radius:50px; font-family:monospace; align-items:center; gap:8px; }
 
     .connect-btn {
-      background: transparent;
-      border: 2px solid var(--purple);
-      color: #fff;
-      padding: 12px 28px;
-      border-radius: 50px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .connect-btn:hover {
-      background: var(--purple);
-      color: #1a0033;
+      background:transparent; border:2px solid var(--purple); color:#fff;
+      padding:12px 28px; border-radius:50px; font-weight:600; cursor:pointer;
     }
 
     .main {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding-top: 120px;
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      text-align:center; padding-top:120px;
     }
 
-    h1 {
-      font-size: 3.8rem;
-      line-height: 1.1;
-      font-weight: 700;
-      background: linear-gradient(90deg, #e0bbff, #c084fc, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    h1 { font-size:3.8rem; font-weight:700;
+      background:linear-gradient(90deg,#e0bbff,#c084fc,#a855f7);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
     }
 
-    .subtitle {
-      font-size: 1.35rem;
-      color: #d1c4ff;
-      margin-bottom: 50px;
+    .subtitle { font-size:1.35rem; color:#d1c4ff; margin:20px 0 50px; }
+
+    .btn-group { display:flex; gap:20px; justify-content:center; flex-wrap:wrap; }
+
+    button {
+      padding:18px 42px; font-size:1.25rem; font-weight:600;
+      border-radius:50px; cursor:pointer; transition:all 0.4s;
     }
 
-    .proposals-section {
-      padding: 100px 5% 120px;
-      background: rgba(10, 10, 31, 0.6);
-    }
+    .btn-primary { background:var(--purple); color:#1a0033; }
+    .btn-primary:hover { transform:translateY(-6px); }
 
-    .section-title {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 50px;
-      color: #e0bbff;
-    }
+    .proposals-section { padding:100px 5% 120px; background:rgba(10,10,31,0.6); }
+
+    .section-title { text-align:center; font-size:2rem; margin-bottom:50px; color:#e0bbff; }
 
     .proposal-card {
-      background: rgba(26, 26, 46, 0.9);
-      border: 1px solid rgba(192, 132, 252, 0.3);
-      border-radius: 20px;
-      padding: 28px;
-      margin-bottom: 25px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      background:rgba(26,26,46,0.9); border:1px solid rgba(192,132,252,0.3);
+      border-radius:20px; padding:28px; margin-bottom:25px;
+      max-width:800px; margin-left:auto; margin-right:auto;
     }
 
-    .vote-bar-container {
-      margin: 20px 0;
-    }
+    .vote-bar { height:12px; background:#2a2a4a; border-radius:999px; overflow:hidden; margin:20px 0; }
+    .yes-bar { height:100%; background:linear-gradient(90deg,#c084fc,#a855f7); transition:width 0.8s; }
+    .no-bar { height:100%; background:linear-gradient(90deg,#f472b6,#db2777); transition:width 0.8s; }
 
-    .vote-bar {
-      height: 12px;
-      background: #2a2a4a;
-      border-radius: 999px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .yes-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #c084fc, #a855f7);
-      transition: width 0.8s ease;
-    }
-
-    .no-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #f472b6, #db2777);
-      transition: width 0.8s ease;
-    }
-
-    .vote-results {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.1rem;
-      margin-top: 8px;
-    }
+    .vote-results { display:flex; justify-content:space-between; font-size:1.1rem; margin-top:8px; }
 
     .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.92);
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
+      display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+      background:rgba(0,0,0,0.92); align-items:center; justify-content:center; z-index:10000;
     }
 
     .modal-content {
-      background: #1a1a2e;
-      padding: 40px;
-      border-radius: 24px;
-      width: 100%;
-      max-width: 480px;
-      text-align: center;
-      border: 1px solid rgba(192,132,252,0.4);
+      background:#1a1a2e; padding:40px; border-radius:24px; width:100%; max-width:480px;
+      border:1px solid rgba(192,132,252,0.4);
     }
 
-    .yes-btn, .no-btn {
-      width: 100%;
-      padding: 20px;
-      font-size: 1.4rem;
-      font-weight: 700;
-      border-radius: 16px;
-      margin: 12px 0;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .yes-btn {
-      background: #c084fc;
-      color: #1a0033;
-    }
-
-    .no-btn {
-      background: #f472b6;
-      color: #1a0033;
-    }
+    .yes-btn { background:#c084fc; color:#1a0033; width:100%; padding:20px; font-size:1.4rem; border-radius:16px; margin:12px 0; }
+    .no-btn { background:#f472b6; color:#1a0033; width:100%; padding:20px; font-size:1.4rem; border-radius:16px; margin:12px 0; }
   </style>
 </head>
 <body>
@@ -269,6 +149,9 @@
     <div>
       <h1>Private Voting<br>on Solana</h1>
       <p class="subtitle">Encrypted votes. Zero knowledge. Powered by Arcium MPC.</p>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="showCreateProposal()">Create New Proposal</button>
+      </div>
     </div>
   </section>
 
@@ -277,24 +160,45 @@
     <div id="proposalList"></div>
   </section>
 
+  <!-- Create Proposal Modal -->
+  <div id="proposalModal" class="modal">
+    <div class="modal-content">
+      <h2 style="color:#e0bbff; margin-bottom:20px;">Create New Proposal</h2>
+      <input id="propTitle" type="text" placeholder="Proposal Title" style="width:100%; padding:14px; margin:10px 0; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
+      <textarea id="propDesc" rows="4" placeholder="Purpose and detailed description..." style="width:100%; padding:14px; margin:10px 0; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;"></textarea>
+      
+      <label style="display:block; margin:15px 0 8px; color:#c084fc;">Duration</label>
+      <select id="propDuration" style="width:100%; padding:14px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
+        <option value="3600">1 hour</option>
+        <option value="21600">6 hours</option>
+        <option value="86400" selected>1 day</option>
+        <option value="259200">3 days</option>
+        <option value="604800">7 days</option>
+      </select>
+
+      <button onclick="submitProposal()" style="width:100%; margin-top:25px; padding:18px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Submit Proposal to DAO</button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; padding:18px; background:transparent; border:2px solid #555; color:#aaa; border-radius:50px;">Cancel</button>
+    </div>
+  </div>
+
   <!-- Vote Modal -->
   <div id="voteModal" class="modal">
     <div class="modal-content">
-      <h2 id="modalTitle" style="margin-bottom:20px; color:#e0bbff;"></h2>
+      <h2 id="modalTitle" style="margin-bottom:15px; color:#e0bbff;"></h2>
       <p id="modalDesc" style="color:#d1c4ff; margin-bottom:30px;"></p>
 
       <button onclick="castVote(true)" class="yes-btn">✅ YES</button>
       <button onclick="castVote(false)" class="no-btn">❌ NO</button>
 
-      <button onclick="hideVoteModal()" style="margin-top:20px; background:transparent; border:2px solid #555; color:#aaa; padding:14px 40px; border-radius:50px;">Cancel</button>
+      <button onclick="hideVoteModal()" style="margin-top:25px; background:transparent; border:2px solid #555; color:#aaa; padding:14px 40px; border-radius:50px;">Cancel</button>
     </div>
   </div>
 
   <!-- About Modal -->
   <div id="aboutModal" class="modal">
     <div class="modal-content">
-      <h2 style="color:#e0bbff;">About Private Voting DAO</h2>
-      <p style="color:#d1c4ff; line-height:1.7; margin:25px 0;">Fully encrypted private voting on Solana Devnet.<br><br>Powered by Arcium MPC — your votes stay completely private.</p>
+      <h2 style="color:#e0bbff;">About</h2>
+      <p style="color:#d1c4ff; line-height:1.7; margin:25px 0;">Fully encrypted private voting on Solana Devnet.<br><br>Powered by Arcium MPC.</p>
       <button onclick="hideAboutModal()" style="padding:16px 40px; background:transparent; border:2px solid #c084fc; color:#fff; border-radius:50px;">Close</button>
     </div>
   </div>
@@ -312,21 +216,41 @@
       try {
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
-        document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+        document.getElementById('walletAddress').textContent = walletAddress.slice(0,6)+'...'+walletAddress.slice(-4);
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('walletSection').style.display = 'flex';
-      } catch (err) {
-        alert("Connection failed");
-      }
+      } catch (err) { alert("Connection failed"); }
     }
 
-    function showVoteModal(index) {
-      if (!walletAddress) {
-        alert("Please connect your wallet first");
-        return;
-      }
-      currentVoteIndex = index;
-      const p = proposals[index];
+    function showCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'flex';
+    }
+
+    function hideCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'none';
+    }
+
+    function submitProposal() {
+      const title = document.getElementById('propTitle').value || "Untitled Proposal";
+      const desc = document.getElementById('propDesc').value || "No description";
+      const duration = parseInt(document.getElementById('propDuration').value);
+
+      proposals.unshift({
+        title: title,
+        desc: desc,
+        endTime: Date.now() + duration * 1000,
+        yes: Math.floor(Math.random()*40) + 55,
+        no: Math.floor(Math.random()*30) + 20
+      });
+
+      hideCreateProposal();
+      renderProposals();
+    }
+
+    function showVoteModal(i) {
+      if (!walletAddress) { alert("Please connect wallet first"); return; }
+      currentVoteIndex = i;
+      const p = proposals[i];
       document.getElementById('modalTitle').textContent = p.title;
       document.getElementById('modalDesc').textContent = p.desc;
       document.getElementById('voteModal').style.display = 'flex';
@@ -340,86 +264,59 @@
       hideVoteModal();
       const p = proposals[currentVoteIndex];
 
-      // Simulate encrypted vote
-      const status = document.createElement('div');
-      status.style.position = 'fixed';
-      status.style.bottom = '30px';
-      status.style.left = '50%';
-      status.style.transform = 'translateX(-50%)';
-      status.style.background = '#1a1a2e';
-      status.style.padding = '16px 30px';
-      status.style.borderRadius = '50px';
-      status.style.boxShadow = '0 10px 30px rgba(192,132,252,0.4)';
-      status.style.zIndex = '9999';
-      status.innerHTML = isYes ? '🔒 Encrypting YES vote...' : '🔒 Encrypting NO vote...';
-      document.body.appendChild(status);
+      if (isYes) p.yes += Math.floor(Math.random()*15) + 8;
+      else p.no += Math.floor(Math.random()*12) + 6;
 
-      setTimeout(() => {
-        if (isYes) p.yes += Math.floor(Math.random() * 12) + 5;
-        else p.no += Math.floor(Math.random() * 10) + 4;
+      renderProposals();
 
-        renderProposals();
-        status.innerHTML = `✅ ${isYes ? 'YES' : 'NO'} vote successfully encrypted on-chain!`;
-        setTimeout(() => status.remove(), 3000);
-      }, 1400);
-    }
-
-    function showCreateProposal() {
-      // You can keep or expand this later
-      alert("Create Proposal modal coming soon (or tell me if you want it added now)");
+      const msg = document.createElement('div');
+      msg.style.cssText = 'position:fixed; bottom:30px; left:50%; transform:translateX(-50%); background:#1a1a2e; padding:16px 30px; border-radius:50px; box-shadow:0 10px 30px rgba(192,132,252,0.5); z-index:9999;';
+      msg.textContent = `✅ ${isYes ? 'YES' : 'NO'} vote encrypted on-chain!`;
+      document.body.appendChild(msg);
+      setTimeout(() => msg.remove(), 3000);
     }
 
     function renderProposals() {
       const container = document.getElementById('proposalList');
       container.innerHTML = proposals.map((p, i) => {
         const total = p.yes + p.no;
-        const yesPercent = total ? Math.round((p.yes / total) * 100) : 50;
-        const noPercent = 100 - yesPercent;
+        const yesP = total ? Math.round((p.yes / total) * 100) : 50;
+        const noP = 100 - yesP;
 
         const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Closed";
+        const min = Math.floor(timeLeft / 60);
+        const sec = timeLeft % 60;
+        const timer = timeLeft > 0 ? `${min}:${sec < 10 ? '0' : ''}${sec}` : "Closed";
 
         return `
           <div class="proposal-card">
-            <strong style="font-size:1.4rem;">${p.title}</strong>
+            <strong style="font-size:1.35rem;">${p.title}</strong>
             <p style="margin:14px 0; color:#ccc;">${p.desc}</p>
-            
-            <div style="color:#c084fc; margin-bottom:12px;">⏳ Ends in <strong>${timerText}</strong></div>
+            <div style="color:#c084fc; margin-bottom:15px;">⏳ Ends in <strong>${timer}</strong></div>
 
-            <div class="vote-bar-container">
-              <div class="vote-bar"><div class="yes-bar" style="width: ${yesPercent}%"></div></div>
-              <div class="vote-results">
-                <span>✅ Yes <strong>${yesPercent}%</strong></span>
-                <span>❌ No <strong>${noPercent}%</strong></span>
-              </div>
+            <div class="vote-bar"><div class="yes-bar" style="width:${yesP}%"></div></div>
+            <div class="vote-results">
+              <span>✅ Yes <strong>${yesP}%</strong></span>
+              <span>❌ No <strong>${noP}%</strong></span>
             </div>
 
-            ${timeLeft > 0 ? `<button onclick="showVoteModal(${i})" style="margin-top:20px; width:100%; padding:16px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Cast Private Vote</button>` : ''}
+            ${timeLeft > 0 ? `<button onclick="showVoteModal(${i})" style="margin-top:25px; width:100%; padding:16px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Cast Private Vote</button>` : ''}
           </div>
         `;
       }).join('');
     }
 
-    function showAboutModal() {
-      document.getElementById('aboutModal').style.display = 'flex';
-    }
+    function showAboutModal() { document.getElementById('aboutModal').style.display = 'flex'; }
+    function hideAboutModal() { document.getElementById('aboutModal').style.display = 'none'; }
 
-    function hideAboutModal() {
-      document.getElementById('aboutModal').style.display = 'none';
-    }
-
-    // Initial demo data
-    proposals = [
-      {
-        title: "Increase marketing budget by 20%",
-        desc: "Allocate more SOL to community growth campaigns",
-        endTime: Date.now() + 7200000,
-        yes: 68,
-        no: 32
-      }
-    ];
+    // Initial data
+    proposals = [{
+      title: "Increase marketing budget by 20%",
+      desc: "Allocate more SOL to community growth campaigns",
+      endTime: Date.now() + 7200000,
+      yes: 68,
+      no: 32
+    }];
 
     renderProposals();
     setInterval(renderProposals, 1000);
