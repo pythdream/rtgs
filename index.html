@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privo DAO • Private Voting on Solana</title>
+  <title>PriVo • Private Voting on Solana</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     :root {
-      --accent: #00ff9d;
+      --accent: #a855f7;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body {
@@ -26,71 +26,119 @@
       z-index: -1;
       pointer-events: none;
     }
-    header {
-      background: rgba(10,10,31,0.95);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 22px 5%;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    nav {
+    .top-bar {
+      position: fixed;
+      top: 20px;
+      left: 0; right: 0;
       max-width: 1280px;
       margin: 0 auto;
+      padding: 0 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      z-index: 1000;
     }
-    .logo {
+    .top-bar .left-icons {
+      display: flex;
+      gap: 24px;
       font-size: 28px;
-      font-weight: 700;
-      letter-spacing: -1px;
-      background: linear-gradient(90deg, #00ff9d, #00ccff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #fff;
+    }
+    .top-bar .right-buttons button {
+      padding: 12px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      border: 2px solid var(--accent);
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 12px;
+    }
+    .top-bar .right-buttons button:hover {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
     }
     .hero {
       max-width: 1280px;
-      margin: 120px auto 80px;
+      margin: 140px auto 80px;
       padding: 0 5%;
       text-align: center;
     }
     h1 {
-      font-size: 3.8rem;
+      font-size: 5.2rem;
       font-weight: 700;
-      line-height: 1.1;
-      margin-bottom: 20px;
+      line-height: 1.05;
+      margin-bottom: 8px;
+      background: linear-gradient(90deg, #fff, #e0e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .subtitle {
-      font-size: 1.5rem;
-      color: #a0a0ff;
-      max-width: 700px;
-      margin: 0 auto 50px;
+    .devnet {
+      font-size: 1.35rem;
+      color: #c9c9ff;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+    .tagline {
+      font-size: 2.4rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .encrypted {
+      font-size: 2.4rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    .highlight {
+      background: #a855f7;
+      color: #fff;
+      padding: 8px 28px;
+      border-radius: 9999px;
+      font-weight: 700;
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
     }
     .buttons {
       display: flex;
-      gap: 20px;
+      gap: 16px;
       justify-content: center;
       flex-wrap: wrap;
+      margin-top: 60px;
     }
     button {
-      padding: 18px 42px;
-      font-size: 1.2rem;
+      padding: 18px 36px;
+      font-size: 1.15rem;
       font-weight: 600;
       border-radius: 9999px;
       cursor: pointer;
       transition: all 0.3s ease;
     }
-    .btn-primary {
-      background: var(--accent);
-      color: #000;
-    }
-    .btn-primary:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,255,157,0.4); }
-    .btn-secondary {
+    .btn-purple {
       background: transparent;
       border: 2px solid var(--accent);
       color: #fff;
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+    }
+    .btn-purple:hover {
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
+      transform: translateY(-3px);
+    }
+    .walletSection {
+      display: none;
+      background: rgba(168, 85, 247, 0.1);
+      border: 1px solid rgba(168, 85, 247, 0.4);
+      padding: 14px 28px;
+      border-radius: 9999px;
+      margin: 40px auto 0;
+      width: fit-content;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.1rem;
     }
     .card {
       background: rgba(255,255,255,0.04);
@@ -125,6 +173,11 @@
       color: #fff;
       font-size: 1.05rem;
     }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      width: 100%;
+    }
     footer {
       text-align: center;
       padding: 80px 20px 40px;
@@ -134,32 +187,36 @@
   </style>
 </head>
 <body>
-  <header>
-    <nav>
-      <div class="logo">Privo DAO</div>
-      <div style="color:#00ff9d; font-weight:500;">Secured by Arcium MPC • Devnet</div>
-    </nav>
-  </header>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="left-icons">
+      <span>𝕏</span>
+      <span onclick="location.reload()" style="cursor:pointer;">⟳</span>
+    </div>
+    <div class="right-buttons">
+      <button onclick="alert('Devnet faucet coming soon!')">Faucet</button>
+      <button onclick="connectPhantom()">Select Wallet</button>
+    </div>
+  </div>
 
   <div class="hero">
-    <h1>Private Voting on Solana</h1>
-    <p class="subtitle">Your vote stays completely private.<br>Powered by Arcium MPC encryption.</p>
+    <h1>PriVo</h1>
+    <p class="devnet">Devnet — Private Voting</p>
 
-    <div id="walletSection" style="display:none; background:rgba(0,255,157,0.08); border:1px solid rgba(0,255,157,0.3); padding:14px 28px; border-radius:9999px; margin-bottom:40px; display:inline-flex; align-items:center; gap:14px;">
+    <p class="tagline">Every vote counts</p>
+    <p class="encrypted">Every vote <span class="highlight">&lt;encrypted&gt;</span></p>
+
+    <div id="walletSection" class="walletSection">
       <span>👛 Connected</span>
       <span id="walletAddress" style="font-family:monospace;"></span>
     </div>
 
     <div class="buttons">
-      <button class="btn-primary" onclick="connectPhantom()" id="connectBtn">
-        Connect Phantom Wallet
-      </button>
-      <button class="btn-primary" onclick="castVote()" id="voteBtn" style="display:none;">
-        Cast Private Vote
-      </button>
-      <button class="btn-secondary" onclick="showCreateProposal()" id="proposalBtn" style="display:none;">
-        Create New Proposal
-      </button>
+      <button class="btn-purple" onclick="howItWorks()">How does it work?</button>
+      <button class="btn-purple" onclick="castVote()">Voting</button>
+      <button class="btn-purple" onclick="showResults()">Results</button>
+      <button class="btn-purple" onclick="showCreateProposal()">Create Poll</button>
     </div>
 
     <div id="status" style="margin:40px 0; min-height:70px; text-align:center; font-size:1.1rem;"></div>
@@ -186,15 +243,15 @@
         <option value="604800">7 days</option>
       </select>
 
-      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:20px;">Submit Proposal to DAO</button>
+      <button onclick="submitProposal()" class="btn-primary">Submit Proposal to DAO</button>
       <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
     </div>
   </div>
 
   <footer>
-    Built with ❤️ using Nullshot.ai for Arcium Retroactive Token Grants<br>
-    Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a><br>
-    Follow us on X: <a href="https://x.com/YOUR_X_HANDLE" style="color:#00ff9d;">@YOUR_X_HANDLE</a>
+    The PriVO application operates on Devnet Solana. It was developed for testing private voting and is not affiliated with the main Arcium development team.<br>
+    Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#a855f7;">github.com/pythdream/rtgs</a><br>
+    Follow us on X: <a href="https://x.com/FaithDpy" style="color:#a855f7;">https://x.com/FaithDpy</a>
   </footer>
 
   <script>
@@ -210,17 +267,17 @@
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
         document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
-        document.getElementById('walletSection').style.display = 'inline-flex';
-        document.getElementById('connectBtn').style.display = 'none';
-        document.getElementById('voteBtn').style.display = 'inline-block';
-        document.getElementById('proposalBtn').style.display = 'inline-block';
+        document.getElementById('walletSection').style.display = 'flex';
       } catch (err) {
         alert("Connection failed");
       }
     }
 
     async function castVote() {
-      if (!walletAddress) return;
+      if (!walletAddress) {
+        alert("Please connect your wallet first");
+        return;
+      }
       const status = document.getElementById('status');
       status.innerHTML = '🔒 Preparing private transaction on devnet...';
       setTimeout(async () => {
@@ -233,6 +290,18 @@
           status.innerHTML = '❌ Transaction rejected';
         }
       }, 900);
+    }
+
+    function howItWorks() {
+      const status = document.getElementById('status');
+      status.innerHTML = '🔐 Privo uses Arcium MPC encryption so your vote stays completely private on Solana devnet.';
+      setTimeout(() => { status.innerHTML = ''; }, 5500);
+    }
+
+    function showResults() {
+      const status = document.getElementById('status');
+      status.innerHTML = '📊 Results appear here once voting ends. Check the proposals below!';
+      setTimeout(() => { status.innerHTML = ''; }, 4500);
     }
 
     function showCreateProposal() { document.getElementById('proposalModal').style.display = 'flex'; }
@@ -252,5 +321,14 @@
       const container = document.getElementById('proposalList');
       container.innerHTML = proposals.map(p => {
         const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
-        const timer = timeLeft > 0 ? `${Math.floor(timeLeft/3600)}h ${Math.floor((timeLeft%3600)/60)}m` : '<span style="color:#00ff9d;">Voting ended • Results ready</span>';
-        return `<
+        const timer = timeLeft > 0 ? `${Math.floor(timeLeft/3600)}h ${Math.floor((timeLeft%3600)/60)}m` : '<span style="color:#a855f7;">Voting ended • Results ready</span>';
+        return `<div class="card"><strong>${p.title}</strong><p style="margin:12px 0;color:#ccc;">${p.desc}</p><div style="color:#a855f7;">${timer}</div></div>`;
+      }).join('');
+    }
+
+    // Demo data
+    proposals = [{ title: "Increase marketing budget by 20%", desc: "Allocate additional SOL to community growth and partnerships", endTime: Date.now() + 86400000 }];
+    renderProposals();
+  </script>
+</body>
+</html>
