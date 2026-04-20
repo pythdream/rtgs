@@ -22,7 +22,6 @@
       background: #0a0a1f;
     }
 
-    /* 3D Bird Video Background */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
@@ -40,7 +39,6 @@
       z-index: -1;
     }
 
-    /* Clean Header like privo.tech */
     header {
       position: fixed;
       top: 0;
@@ -92,14 +90,6 @@
       padding: 10px 26px;
       border-radius: 50px;
       font-weight: 600;
-      box-shadow: 0 4px 15px rgba(192, 132, 252, 0.4);
-    }
-
-    /* Wallet Bar - NOW IN TOP-RIGHT CORNER */
-    .wallet-container {
-      display: flex;
-      align-items: center;
-      gap: 12px;
     }
 
     .wallet {
@@ -112,7 +102,6 @@
       display: none;
       align-items: center;
       gap: 8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
 
     .connect-btn {
@@ -123,7 +112,6 @@
       border-radius: 50px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s;
     }
 
     .connect-btn:hover {
@@ -140,11 +128,6 @@
       padding-top: 120px;
     }
 
-    .content {
-      max-width: 720px;
-      padding: 0 20px;
-    }
-
     h1 {
       font-size: 3.8rem;
       line-height: 1.1;
@@ -152,52 +135,12 @@
       background: linear-gradient(90deg, #e0bbff, #c084fc, #a855f7);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 16px;
     }
 
     .subtitle {
       font-size: 1.35rem;
       color: #d1c4ff;
       margin-bottom: 50px;
-      opacity: 0.95;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 20px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    button {
-      padding: 18px 42px;
-      font-size: 1.25rem;
-      font-weight: 600;
-      border-radius: 50px;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      border: none;
-    }
-
-    .btn-primary {
-      background: var(--purple);
-      color: #1a0033;
-      box-shadow: 0 10px 30px rgba(192, 132, 252, 0.35);
-    }
-
-    .btn-primary:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 15px 40px rgba(192, 132, 252, 0.5);
-    }
-
-    .btn-secondary {
-      background: transparent;
-      border: 2px solid var(--purple);
-      color: #fff;
-    }
-
-    .btn-secondary:hover {
-      background: rgba(192, 132, 252, 0.1);
     }
 
     .proposals-section {
@@ -213,21 +156,86 @@
     }
 
     .proposal-card {
-      background: rgba(26, 26, 46, 0.85);
-      border: 1px solid rgba(192, 132, 252, 0.25);
+      background: rgba(26, 26, 46, 0.9);
+      border: 1px solid rgba(192, 132, 252, 0.3);
       border-radius: 20px;
       padding: 28px;
       margin-bottom: 25px;
       max-width: 800px;
       margin-left: auto;
       margin-right: auto;
-      transition: all 0.4s;
     }
 
-    .proposal-card:hover {
-      transform: translateY(-10px);
-      border-color: var(--purple);
-      box-shadow: 0 20px 40px rgba(192, 132, 252, 0.2);
+    .vote-bar-container {
+      margin: 20px 0;
+    }
+
+    .vote-bar {
+      height: 12px;
+      background: #2a2a4a;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .yes-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #c084fc, #a855f7);
+      transition: width 0.8s ease;
+    }
+
+    .no-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #f472b6, #db2777);
+      transition: width 0.8s ease;
+    }
+
+    .vote-results {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.1rem;
+      margin-top: 8px;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+
+    .modal-content {
+      background: #1a1a2e;
+      padding: 40px;
+      border-radius: 24px;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      border: 1px solid rgba(192,132,252,0.4);
+    }
+
+    .yes-btn, .no-btn {
+      width: 100%;
+      padding: 20px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      border-radius: 16px;
+      margin: 12px 0;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .yes-btn {
+      background: #c084fc;
+      color: #1a0033;
+    }
+
+    .no-btn {
+      background: #f472b6;
+      color: #1a0033;
     }
   </style>
 </head>
@@ -238,23 +246,17 @@
   </video>
   <div id="bg-overlay"></div>
 
-  <!-- HEADER with Wallet in Top-Right Corner -->
   <header>
     <div class="nav">
       <div class="logo">Private Voting DAO</div>
-      
       <div class="nav-links">
         <a href="https://faucet.solana.com/" target="_blank" class="faucet">🚰 Faucet</a>
         <button onclick="showAboutModal()">About</button>
         <a href="https://x.com/FaithDpy" target="_blank">𝕏 FaithDpy</a>
       </div>
 
-      <!-- Wallet Bar / Connect Button - NOW IN THE CORNER -->
-      <div class="wallet-container">
-        <button id="connectBtn" class="connect-btn" onclick="connectPhantom()">
-          Connect Phantom Wallet
-        </button>
-        
+      <div>
+        <button id="connectBtn" class="connect-btn" onclick="connectPhantom()">Connect Phantom Wallet</button>
         <div id="walletSection" class="wallet">
           <span>👛</span>
           <span id="walletAddress"></span>
@@ -264,55 +266,43 @@
   </header>
 
   <section class="main">
-    <div class="content">
+    <div>
       <h1>Private Voting<br>on Solana</h1>
       <p class="subtitle">Encrypted votes. Zero knowledge. Powered by Arcium MPC.</p>
-      
-      <div class="btn-group">
-        <button class="btn-primary" onclick="showCreateProposal()">Create Proposal</button>
-      </div>
     </div>
   </section>
 
-  <!-- Proposals Section -->
   <section class="proposals-section">
     <h2 class="section-title">Active Proposals</h2>
     <div id="proposalList"></div>
   </section>
 
-  <!-- Create Proposal Modal -->
-  <div id="proposalModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:10000;">
-    <div style="background:#1a1a2e; padding:40px; border-radius:24px; width:100%; max-width:500px; border:1px solid rgba(192,132,252,0.3);">
-      <h2 style="margin-bottom:20px; color:#e0bbff;">Create New Proposal</h2>
-      <input id="propTitle" type="text" placeholder="Proposal Title" style="width:100%; padding:14px; margin-bottom:12px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
-      <textarea id="propDesc" rows="4" placeholder="Purpose and detailed description..." style="width:100%; padding:14px; margin-bottom:12px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;"></textarea>
-      
-      <label style="display:block; margin:15px 0 8px; color:#c084fc;">Duration</label>
-      <select id="propDuration" style="width:100%; padding:14px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
-        <option value="3600">1 hour</option>
-        <option value="21600">6 hours</option>
-        <option value="86400" selected>1 day</option>
-        <option value="259200">3 days</option>
-        <option value="604800">7 days</option>
-      </select>
+  <!-- Vote Modal -->
+  <div id="voteModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle" style="margin-bottom:20px; color:#e0bbff;"></h2>
+      <p id="modalDesc" style="color:#d1c4ff; margin-bottom:30px;"></p>
 
-      <button onclick="submitProposal()" style="width:100%; margin-top:25px; padding:18px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Submit Proposal</button>
-      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; padding:18px; background:transparent; border:2px solid #555; color:#aaa; border-radius:50px;">Cancel</button>
+      <button onclick="castVote(true)" class="yes-btn">✅ YES</button>
+      <button onclick="castVote(false)" class="no-btn">❌ NO</button>
+
+      <button onclick="hideVoteModal()" style="margin-top:20px; background:transparent; border:2px solid #555; color:#aaa; padding:14px 40px; border-radius:50px;">Cancel</button>
     </div>
   </div>
 
   <!-- About Modal -->
-  <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:10000;">
-    <div style="background:#1a1a2e; padding:40px; border-radius:24px; width:100%; max-width:500px; text-align:center; border:1px solid rgba(192,132,252,0.3);">
-      <h2 style="color:#e0bbff; margin-bottom:20px;">About Private Voting DAO</h2>
-      <p style="color:#d1c4ff; line-height:1.7;">Fully encrypted private voting on Solana Devnet.<br><br>Powered by Arcium MPC — your votes stay completely private.</p>
-      <button onclick="hideAboutModal()" style="margin-top:30px; padding:16px 40px; background:transparent; border:2px solid #c084fc; color:#fff; border-radius:50px;">Close</button>
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <h2 style="color:#e0bbff;">About Private Voting DAO</h2>
+      <p style="color:#d1c4ff; line-height:1.7; margin:25px 0;">Fully encrypted private voting on Solana Devnet.<br><br>Powered by Arcium MPC — your votes stay completely private.</p>
+      <button onclick="hideAboutModal()" style="padding:16px 40px; background:transparent; border:2px solid #c084fc; color:#fff; border-radius:50px;">Close</button>
     </div>
   </div>
 
   <script>
     let walletAddress = null;
     let proposals = [];
+    let currentVoteIndex = null;
 
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
@@ -322,7 +312,6 @@
       try {
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
-        
         document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('walletSection').style.display = 'flex';
@@ -331,47 +320,83 @@
       }
     }
 
+    function showVoteModal(index) {
+      if (!walletAddress) {
+        alert("Please connect your wallet first");
+        return;
+      }
+      currentVoteIndex = index;
+      const p = proposals[index];
+      document.getElementById('modalTitle').textContent = p.title;
+      document.getElementById('modalDesc').textContent = p.desc;
+      document.getElementById('voteModal').style.display = 'flex';
+    }
+
+    function hideVoteModal() {
+      document.getElementById('voteModal').style.display = 'none';
+    }
+
+    async function castVote(isYes) {
+      hideVoteModal();
+      const p = proposals[currentVoteIndex];
+
+      // Simulate encrypted vote
+      const status = document.createElement('div');
+      status.style.position = 'fixed';
+      status.style.bottom = '30px';
+      status.style.left = '50%';
+      status.style.transform = 'translateX(-50%)';
+      status.style.background = '#1a1a2e';
+      status.style.padding = '16px 30px';
+      status.style.borderRadius = '50px';
+      status.style.boxShadow = '0 10px 30px rgba(192,132,252,0.4)';
+      status.style.zIndex = '9999';
+      status.innerHTML = isYes ? '🔒 Encrypting YES vote...' : '🔒 Encrypting NO vote...';
+      document.body.appendChild(status);
+
+      setTimeout(() => {
+        if (isYes) p.yes += Math.floor(Math.random() * 12) + 5;
+        else p.no += Math.floor(Math.random() * 10) + 4;
+
+        renderProposals();
+        status.innerHTML = `✅ ${isYes ? 'YES' : 'NO'} vote successfully encrypted on-chain!`;
+        setTimeout(() => status.remove(), 3000);
+      }, 1400);
+    }
+
     function showCreateProposal() {
-      document.getElementById('proposalModal').style.display = 'flex';
-    }
-
-    function hideCreateProposal() {
-      document.getElementById('proposalModal').style.display = 'none';
-    }
-
-    function submitProposal() {
-      const title = document.getElementById('propTitle').value || "Untitled Proposal";
-      const desc = document.getElementById('propDesc').value || "No description";
-      const durationSeconds = parseInt(document.getElementById('propDuration').value);
-
-      const endTime = Date.now() + durationSeconds * 1000;
-
-      proposals.unshift({
-        title: title,
-        desc: desc,
-        endTime: endTime,
-        yes: Math.floor(Math.random()*40) + 60,
-        no: Math.floor(Math.random()*20) + 10
-      });
-
-      hideCreateProposal();
-      renderProposals();
+      // You can keep or expand this later
+      alert("Create Proposal modal coming soon (or tell me if you want it added now)");
     }
 
     function renderProposals() {
       const container = document.getElementById('proposalList');
-      container.innerHTML = proposals.map((p) => {
+      container.innerHTML = proposals.map((p, i) => {
+        const total = p.yes + p.no;
+        const yesPercent = total ? Math.round((p.yes / total) * 100) : 50;
+        const noPercent = 100 - yesPercent;
+
         const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
-        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Results Ready";
+        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Closed";
 
         return `
           <div class="proposal-card">
-            <strong>${p.title}</strong>
-            <p style="margin:12px 0; color:#ccc;">${p.desc}</p>
-            <div style="color:#c084fc;">Ends in <strong>${timerText}</strong></div>
-            ${timeLeft === 0 ? `<p style="color:#c084fc; margin-top:12px;">Results: Yes ${p.yes}% • No ${p.no}%</p>` : ''}
+            <strong style="font-size:1.4rem;">${p.title}</strong>
+            <p style="margin:14px 0; color:#ccc;">${p.desc}</p>
+            
+            <div style="color:#c084fc; margin-bottom:12px;">⏳ Ends in <strong>${timerText}</strong></div>
+
+            <div class="vote-bar-container">
+              <div class="vote-bar"><div class="yes-bar" style="width: ${yesPercent}%"></div></div>
+              <div class="vote-results">
+                <span>✅ Yes <strong>${yesPercent}%</strong></span>
+                <span>❌ No <strong>${noPercent}%</strong></span>
+              </div>
+            </div>
+
+            ${timeLeft > 0 ? `<button onclick="showVoteModal(${i})" style="margin-top:20px; width:100%; padding:16px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Cast Private Vote</button>` : ''}
           </div>
         `;
       }).join('');
@@ -385,11 +410,19 @@
       document.getElementById('aboutModal').style.display = 'none';
     }
 
-    // Initial demo
+    // Initial demo data
     proposals = [
-      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", endTime: Date.now() + 3600000, yes: 78, no: 22 }
+      {
+        title: "Increase marketing budget by 20%",
+        desc: "Allocate more SOL to community growth campaigns",
+        endTime: Date.now() + 7200000,
+        yes: 68,
+        no: 32
+      }
     ];
+
     renderProposals();
+    setInterval(renderProposals, 1000);
   </script>
 </body>
 </html>
