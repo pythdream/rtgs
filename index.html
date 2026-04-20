@@ -7,15 +7,6 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     
-    :root {
-      --neon: #00ff9d;
-      --accent: #00ccff;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       color: #fff;
@@ -23,10 +14,9 @@
       padding: 0;
       min-height: 100vh;
       overflow-x: hidden;
-      perspective: 1200px; /* enables 3D space */
     }
 
-    /* BIRD VIDEO BACKGROUND - full screen, subtle, looping */
+    /* Exact bird video as background */
     #bg-video {
       position: fixed;
       top: 0;
@@ -35,132 +25,54 @@
       height: 100%;
       object-fit: cover;
       z-index: -2;
-      opacity: 0.75;
-      filter: brightness(0.85) contrast(1.1);
+      opacity: 0.85;
+      filter: brightness(0.9) contrast(1.05);
     }
 
-    /* Dark overlay for better readability + classic depth */
+    /* Dark overlay so text remains readable */
     #bg-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(15,15,35,0.92), rgba(26,26,46,0.88));
+      background: rgba(15, 15, 35, 0.88);
       z-index: -1;
-    }
-
-    header {
-      background: rgba(15, 15, 35, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(0, 255, 157, 0.3);
-      padding: 16px 20px;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 8px 32px rgba(0, 255, 157, 0.15);
-    }
-
-    .nav-container {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 600;
-      background: linear-gradient(90deg, var(--neon), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .nav-btn {
-      padding: 10px 22px;
-      font-size: 1.05rem;
-      font-weight: 500;
-      border-radius: 9999px;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-      color: #fff;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .nav-btn:hover {
-      background: rgba(0, 255, 157, 0.2);
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 25px rgba(0, 255, 157, 0.4);
-    }
-
-    .faucet-btn {
-      background: var(--neon);
-      color: #000;
-      font-weight: 600;
-      box-shadow: 0 6px 20px rgba(0, 255, 157, 0.5);
-    }
-
-    .x-link {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.3s;
-    }
-
-    .x-link:hover {
-      color: var(--neon);
-      transform: scale(1.1);
     }
 
     .container { 
       max-width: 900px; 
-      margin: 40px auto; 
-      padding: 0 20px; 
+      margin: 0 auto; 
+      padding: 40px 20px; 
       position: relative;
       z-index: 10;
     }
 
     h1 {
-      font-size: 3rem;
-      background: linear-gradient(90deg, var(--neon), var(--accent));
+      font-size: 2.8rem;
+      background: linear-gradient(90deg, #00ff9d, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-align: center;
-      text-shadow: 0 0 30px rgba(0, 255, 157, 0.6);
-      margin-bottom: 8px;
+      text-shadow: 0 0 25px rgba(0, 255, 157, 0.6);
     }
 
     .subtitle { 
       text-align: center; 
       color: #a0a0ff; 
-      margin-bottom: 40px; 
-      font-size: 1.15rem;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px; 
     }
 
     .wallet {
-      background: rgba(0,255,157,0.12);
-      border: 1px solid rgba(0,255,157,0.3);
-      padding: 14px 26px;
-      border-radius: 16px;
+      background: rgba(0,255,157,0.1);
+      padding: 12px 24px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       gap: 12px;
       margin-bottom: 30px;
       font-family: monospace;
-      box-shadow: 0 8px 25px rgba(0, 255, 157, 0.2);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     }
 
     button {
@@ -168,153 +80,109 @@
       font-size: 1.2rem;
       font-weight: 600;
       border: none;
-      border-radius: 16px;
+      border-radius: 12px;
       cursor: pointer;
       margin: 12px;
-      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      transition: all 0.3s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
     }
-
     .btn-primary { 
-      background: var(--neon); 
+      background: #00ff9d; 
       color: #000; 
     }
     .btn-primary:hover { 
-      background: #00e68a; 
-      transform: translateY(-6px) scale(1.05);
-      box-shadow: 0 15px 35px rgba(0, 255, 157, 0.5);
+      background: #00cc7a; 
+      transform: translateY(-4px); 
     }
-
     .btn-secondary { 
       background: transparent; 
-      border: 2px solid var(--neon); 
+      border: 2px solid #00ff9d; 
       color: #fff; 
     }
     .btn-secondary:hover { 
-      background: rgba(0,255,157,0.15); 
-      transform: translateY(-4px);
+      background: rgba(0,255,157,0.1); 
     }
 
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.85);
       align-items: center;
       justify-content: center;
       z-index: 1000;
-      backdrop-filter: blur(12px);
     }
-
     .modal-content {
-      background: rgba(26, 26, 46, 0.95);
-      border: 1px solid rgba(0, 255, 157, 0.3);
-      padding: 32px;
-      border-radius: 20px;
+      background: #1a1a2e;
+      padding: 30px;
+      border-radius: 16px;
       width: 100%;
-      max-width: 520px;
-      box-shadow: 0 25px 60px rgba(0, 255, 157, 0.25),
-                  0 0 0 1px rgba(255,255,255,0.1) inset;
-      transform: translateY(0);
-      transition: transform 0.4s ease;
-    }
-
-    .modal-content:hover {
-      transform: translateY(-8px);
+      max-width: 500px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.7);
     }
 
     input, textarea, select {
       width: 100%;
-      padding: 14px;
-      margin: 12px 0;
-      background: rgba(15,15,35,0.9);
-      border: 1px solid rgba(0,255,157,0.3);
-      border-radius: 12px;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0f0f23;
+      border: 1px solid #333;
+      border-radius: 8px;
       color: #fff;
-      box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
     }
 
     .proposal-card {
-      background: rgba(26,26,46,0.95);
-      padding: 24px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-      border: 1px solid rgba(0,255,157,0.25);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5),
-                  0 0 0 1px rgba(255,255,255,0.08) inset;
-      transition: all 0.4s ease;
+      background: #1a1a2e;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      text-align: left;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      transition: transform 0.3s;
     }
-
     .proposal-card:hover {
-      transform: translateY(-8px) rotateX(8deg);
-      box-shadow: 0 25px 50px rgba(0, 255, 157, 0.3);
+      transform: translateY(-6px);
     }
 
     .timer { 
-      color: var(--neon); 
+      color: #00ff9d; 
       font-size: 0.95rem; 
-      font-weight: 500;
     }
 
     #status {
-      margin: 30px 0;
-      min-height: 80px;
-      text-align: center;
-      text-shadow: 0 0 15px rgba(0, 255, 157, 0.6);
+      margin:30px 0; 
+      min-height:80px; 
+      text-align:center;
     }
   </style>
 </head>
 <body>
 
-  <!-- BIRD VIDEO BACKGROUND -->
+  <!-- The exact 3D bird video from the tweet as background -->
   <video id="bg-video" autoplay loop muted playsinline>
     <source src="https://video.twimg.com/amplify_video/2037418193816576000/vid/avc1/416x752/uLopM8-wWo-6BCzY.mp4?tag=24" type="video/mp4">
+    Your browser does not support the video tag.
   </video>
   <div id="bg-overlay"></div>
-
-  <!-- HEADER / NAV -->
-  <header>
-    <div class="nav-container">
-      <div class="logo">Private Voting DAO</div>
-      
-      <div class="nav-links">
-        <!-- Faucet -->
-        <a href="https://faucet.solana.com/" target="_blank" class="nav-btn faucet-btn">
-          🚰 Faucet
-        </a>
-
-        <!-- About -->
-        <button onclick="showAboutModal()" class="nav-btn" style="border:2px solid #00ff9d; background:transparent;">
-          About
-        </button>
-
-        <!-- X Link -->
-        <a href="https://x.com/FaithDpy" target="_blank" class="x-link">
-          <span style="font-size:1.4rem;">𝕏</span>
-          FaithDpy
-        </a>
-      </div>
-
-      <div id="walletSection" class="wallet" style="display:none; margin:0;">
-        <span>👛</span>
-        <span id="walletAddress"></span>
-      </div>
-    </div>
-  </header>
 
   <div class="container">
     <h1>Private Voting DAO</h1>
     <p class="subtitle">Encrypted • Private • Powered by Arcium MPC on Devnet</p>
 
-    <button id="connectBtn" class="btn-primary" onclick="connectPhantom()" style="display:block; margin:0 auto 30px;">
+    <div id="walletSection" class="wallet" style="display:none;">
+      <span>👛 Connected:</span>
+      <span id="walletAddress"></span>
+    </div>
+
+    <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
       Connect Phantom Wallet
     </button>
 
-    <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none; margin:0 auto 30px;">
+    <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none;">
       Cast Private Vote on Devnet
     </button>
 
-    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none; margin:0 auto 30px;">
+    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
       Create New Proposal
     </button>
 
@@ -351,20 +219,6 @@
     </div>
   </div>
 
-  <!-- About Modal -->
-  <div id="aboutModal" class="modal">
-    <div class="modal-content">
-      <h2>About Private Voting DAO</h2>
-      <p style="line-height:1.7; color:#ccc;">
-        Fully encrypted private voting on Solana Devnet.<br><br>
-        Powered by Arcium MPC — your votes stay completely private until results are revealed.<br><br>
-        The bird is the message.<br>
-        Privacy is Freedom.
-      </p>
-      <button onclick="hideAboutModal()" style="width:100%; margin-top:20px; background:none; border:1px solid #555; color:#aaa; padding:14px;">Close</button>
-    </div>
-  </div>
-
   <script>
     let walletAddress = null;
     let proposals = [];
@@ -380,8 +234,8 @@
         document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
         document.getElementById('walletSection').style.display = 'inline-flex';
         document.getElementById('connectBtn').style.display = 'none';
-        document.getElementById('voteBtn').style.display = 'block';
-        document.getElementById('proposalBtn').style.display = 'block';
+        document.getElementById('voteBtn').style.display = 'inline-block';
+        document.getElementById('proposalBtn').style.display = 'inline-block';
       } catch (err) {
         alert("Connection failed");
       }
@@ -455,15 +309,6 @@
       }).join('');
     }
 
-    function showAboutModal() {
-      document.getElementById('aboutModal').style.display = 'flex';
-    }
-
-    function hideAboutModal() {
-      document.getElementById('aboutModal').style.display = 'none';
-    }
-
-    // Update timers every second
     setInterval(() => {
       renderProposals();
     }, 1000);
