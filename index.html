@@ -16,7 +16,7 @@
       overflow-x: hidden;
     }
 
-    /* 3D Bird Video as Full Background - exactly as requested */
+    /* 3D Bird Video Background */
     #bg-video {
       position: fixed;
       top: 0;
@@ -25,17 +25,17 @@
       height: 100%;
       object-fit: cover;
       z-index: -2;
-      filter: brightness(0.85) contrast(1.1);
+      filter: brightness(0.88) contrast(1.08);
     }
 
-    /* Dark overlay for readability (like privo.tech style) */
+    /* Refined Dark Overlay - better visibility of bird + good readability */
     #bg-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(15, 15, 35, 0.85);
+      background: rgba(15, 15, 35, 0.78);   /* ← Refined opacity here */
       z-index: -1;
     }
 
@@ -47,9 +47,8 @@
       z-index: 10;
     }
 
-    /* Header Nav like privo.tech */
     header {
-      background: rgba(15, 15, 35, 0.9);
+      background: rgba(15, 15, 35, 0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(0, 255, 157, 0.2);
       padding: 16px 20px;
@@ -285,7 +284,6 @@
     let walletAddress = null;
     let proposals = [];
 
-    // Your existing functions (unchanged)
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
         alert("Please install Phantom wallet → phantom.app");
