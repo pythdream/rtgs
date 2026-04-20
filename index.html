@@ -3,93 +3,147 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Private Voting DAO • Arcium RTG</title>
+  <title>Private Voting DAO • Arcium</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
-      color: #fff;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #0a0a1f;
+      color: #e0e0ff;
       margin: 0;
       padding: 0;
       min-height: 100vh;
     }
-    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
-    h1 {
-      font-size: 2.8rem;
+    header {
+      background: rgba(10,10,31,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 18px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 600;
       background: linear-gradient(90deg, #00ff9d, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-align: center;
     }
-    .subtitle { text-align: center; color: #a0a0ff; margin-bottom: 30px; }
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    h1 {
+      font-size: 2.6rem;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #a0a0ff;
+      font-size: 1.25rem;
+      margin-bottom: 40px;
+    }
     .wallet {
-      background: rgba(0,255,157,0.1);
+      background: rgba(0,255,157,0.08);
+      border: 1px solid rgba(0,255,157,0.3);
       padding: 12px 24px;
-      border-radius: 12px;
+      border-radius: 9999px;
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      margin-bottom: 30px;
       font-family: monospace;
+      font-size: 1.05rem;
     }
     button {
-      padding: 16px 40px;
-      font-size: 1.2rem;
+      padding: 14px 36px;
+      font-size: 1.1rem;
       font-weight: 600;
-      border: none;
-      border-radius: 12px;
+      border-radius: 9999px;
       cursor: pointer;
-      margin: 12px;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
     }
-    .btn-primary { background: #00ff9d; color: #000; }
-    .btn-primary:hover { background: #00cc7a; transform: translateY(-3px); }
-    .btn-secondary { background: transparent; border: 2px solid #00ff9d; color: #fff; }
-    .btn-secondary:hover { background: rgba(0,255,157,0.1); }
+    .btn-primary {
+      background: #00ff9d;
+      color: #000;
+    }
+    .btn-primary:hover {
+      background: #00e68a;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 2px solid #00ff9d;
+      color: #fff;
+    }
+    .btn-secondary:hover {
+      background: rgba(0,255,157,0.1);
+    }
+    .card {
+      background: #16162b;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
     .modal {
       display: none;
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      inset: 0;
       background: rgba(0,0,0,0.85);
       align-items: center;
       justify-content: center;
-      z-index: 1000;
+      z-index: 2000;
     }
     .modal-content {
-      background: #1a1a2e;
-      padding: 30px;
-      border-radius: 16px;
+      background: #16162b;
+      padding: 32px;
+      border-radius: 20px;
       width: 100%;
-      max-width: 500px;
+      max-width: 520px;
     }
     input, textarea, select {
       width: 100%;
-      padding: 12px;
-      margin: 10px 0;
+      padding: 14px;
+      margin: 12px 0;
       background: #0f0f23;
       border: 1px solid #333;
-      border-radius: 8px;
-      color: #fff;
-    }
-    .proposal-card {
-      background: #1a1a2e;
-      padding: 20px;
       border-radius: 12px;
-      margin-bottom: 15px;
-      text-align: left;
+      color: #fff;
+      font-size: 1rem;
     }
-    .timer { color: #00ff9d; font-size: 0.95rem; }
+    .status {
+      margin: 30px 0;
+      text-align: center;
+      min-height: 70px;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <div class="nav">
+      <div class="logo">Private Voting DAO</div>
+      <div style="color:#00ff9d; font-weight:500;">Arcium MPC • Devnet</div>
+    </div>
+  </header>
+
   <div class="container">
     <h1>Private Voting DAO</h1>
-    <p class="subtitle">Encrypted • Private • Powered by Arcium MPC on Devnet</p>
+    <p class="subtitle">Fully encrypted governance powered by Arcium MPC</p>
 
     <div id="walletSection" class="wallet" style="display:none;">
-      <span>👛 Connected:</span>
-      <span id="walletAddress"></span>
+      <span>Connected:</span>
+      <span id="walletAddress" style="font-family:monospace;"></span>
     </div>
 
     <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
@@ -97,43 +151,40 @@
     </button>
 
     <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none;">
-      Cast Private Vote on Devnet
+      Cast Private Vote
     </button>
 
     <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
       Create New Proposal
     </button>
 
-    <div id="status" style="margin:30px 0; min-height:80px; text-align:center;"></div>
+    <div id="status" class="status"></div>
 
-    <div class="proposals">
-      <h2 style="text-align:center; margin-bottom:20px;">Active Proposals</h2>
+    <!-- Active Proposals -->
+    <div class="card">
+      <h2 style="margin-bottom:20px;">Active Proposals</h2>
       <div id="proposalList"></div>
     </div>
-
-    <p style="margin-top:80px; text-align:center; color:#666;">
-      Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
-    </p>
   </div>
 
   <!-- Create Proposal Modal -->
   <div id="proposalModal" class="modal">
     <div class="modal-content">
-      <h2>Create New Proposal</h2>
+      <h2 style="margin-top:0;">Create New Proposal</h2>
       <input id="propTitle" type="text" placeholder="Proposal Title">
-      <textarea id="propDesc" rows="4" placeholder="Purpose and detailed description of the proposal..."></textarea>
+      <textarea id="propDesc" rows="5" placeholder="Detailed purpose and explanation of the proposal..."></textarea>
       
-      <label>Duration of Proposal</label>
+      <label style="display:block; margin:15px 0 8px;">Voting Duration</label>
       <select id="propDuration">
         <option value="3600">1 hour</option>
         <option value="21600">6 hours</option>
-        <option value="86400" selected>1 day</option>
+        <option value="86400" selected>24 hours</option>
         <option value="259200">3 days</option>
         <option value="604800">7 days</option>
       </select>
 
-      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:15px;">Submit Proposal to DAO</button>
-      <button onclick="hideCreateProposal()" style="width:100%; margin-top:10px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
+      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:20px;">Submit Proposal to DAO</button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
     </div>
   </div>
 
@@ -143,7 +194,7 @@
 
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
-        alert("Please install Phantom wallet → phantom.app");
+        alert("Please install Phantom wallet (phantom.app)");
         return;
       }
       try {
@@ -172,7 +223,7 @@
         } catch (err) {
           status.innerHTML = '❌ Transaction rejected in Phantom';
         }
-      }, 800);
+      }, 900);
     }
 
     function showCreateProposal() {
@@ -185,54 +236,45 @@
 
     function submitProposal() {
       const title = document.getElementById('propTitle').value || "Untitled Proposal";
-      const desc = document.getElementById('propDesc').value || "No description";
-      const durationSeconds = parseInt(document.getElementById('propDuration').value);
-
-      const endTime = Date.now() + durationSeconds * 1000;
+      const desc = document.getElementById('propDesc').value || "No description provided";
+      const duration = parseInt(document.getElementById('propDuration').value);
 
       proposals.unshift({
         title: title,
         desc: desc,
-        endTime: endTime,
-        yes: Math.floor(Math.random()*40) + 60,
-        no: Math.floor(Math.random()*20) + 10
+        endTime: Date.now() + duration * 1000,
+        yes: 0,
+        no: 0
       });
 
       hideCreateProposal();
       renderProposals();
 
       const status = document.getElementById('status');
-      status.innerHTML = `✅ Proposal "${title}" created on-chain!`;
-      setTimeout(() => status.innerHTML = '', 3000);
+      status.innerHTML = `✅ Proposal created on-chain!<br>"${title}" is now live for voting.`;
+      setTimeout(() => status.innerHTML = '', 4000);
     }
 
     function renderProposals() {
       const container = document.getElementById('proposalList');
-      container.innerHTML = proposals.map((p, i) => {
+      container.innerHTML = proposals.map(p => {
         const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
-        const minutes = Math.floor(timeLeft / 60);
-        const seconds = timeLeft % 60;
-        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Results Ready";
-
+        const timer = timeLeft > 0 
+          ? `${Math.floor(timeLeft/3600)}h ${Math.floor((timeLeft%3600)/60)}m` 
+          : `<span style="color:#00ff9d;">Voting ended • Results ready</span>`;
         return `
-          <div class="proposal-card">
+          <div class="card">
             <strong>${p.title}</strong>
-            <p style="margin:8px 0; color:#ccc;">${p.desc}</p>
-            <div class="timer">Ends in <strong>${timerText}</strong></div>
-            ${timeLeft === 0 ? `<p style="color:#00ff9d;">Results: Yes ${p.yes}% • No ${p.no}%</p>` : ''}
+            <p style="margin:12px 0; color:#ccc;">${p.desc}</p>
+            <div style="color:#00ff9d; font-size:0.95rem;">${timer}</div>
           </div>
         `;
       }).join('');
     }
 
-    // Update timers every second
-    setInterval(() => {
-      renderProposals();
-    }, 1000);
-
-    // Initial demo proposals
+    // Initial demo data
     proposals = [
-      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", endTime: Date.now() + 3600000, yes: 78, no: 22 }
+      { title: "Increase marketing budget by 20%", desc: "Allocate additional SOL to community growth campaigns and partnerships", endTime: Date.now() + 86400000, yes: 78, no: 22 }
     ];
     renderProposals();
   </script>
