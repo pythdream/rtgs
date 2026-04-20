@@ -26,6 +26,8 @@
       z-index: -1;
       pointer-events: none;
     }
+
+    /* Advanced Top Bar - Screenshot Style */
     .top-bar {
       position: fixed;
       top: 20px;
@@ -43,6 +45,7 @@
       gap: 24px;
       font-size: 28px;
       color: #fff;
+      cursor: pointer;
     }
     .top-bar .right-buttons button {
       padding: 12px 28px;
@@ -55,12 +58,15 @@
       cursor: pointer;
       transition: all 0.3s ease;
       margin-left: 12px;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
     }
     .top-bar .right-buttons button:hover {
       background: var(--accent);
       color: #000;
-      box-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+      transform: translateY(-2px);
     }
+
     .hero {
       max-width: 1280px;
       margin: 140px auto 80px;
@@ -102,7 +108,13 @@
       border-radius: 9999px;
       font-weight: 700;
       box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+      animation: glow 2s infinite alternate;
     }
+    @keyframes glow {
+      from { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
+      to   { box-shadow: 0 0 40px rgba(168, 85, 247, 1); }
+    }
+
     .buttons {
       display: flex;
       gap: 16px;
@@ -122,12 +134,13 @@
       background: transparent;
       border: 2px solid var(--accent);
       color: #fff;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
     }
     .btn-purple:hover {
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.7);
-      transform: translateY(-3px);
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.8);
+      transform: translateY(-4px);
     }
+
     .walletSection {
       display: none;
       background: rgba(168, 85, 247, 0.1);
@@ -140,13 +153,20 @@
       gap: 14px;
       font-size: 1.1rem;
     }
+
     .card {
       background: rgba(255,255,255,0.04);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 24px;
       padding: 32px;
       margin-bottom: 24px;
+      transition: all 0.3s ease;
     }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px rgba(168, 85, 247, 0.15);
+    }
+
     .modal {
       display: none;
       position: fixed;
@@ -162,7 +182,9 @@
       border-radius: 24px;
       width: 100%;
       max-width: 520px;
+      box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
     }
+
     input, textarea, select {
       width: 100%;
       padding: 18px;
@@ -173,11 +195,13 @@
       color: #fff;
       font-size: 1.05rem;
     }
+
     .btn-primary {
       background: var(--accent);
       color: #fff;
       width: 100%;
     }
+
     footer {
       text-align: center;
       padding: 80px 20px 40px;
@@ -188,7 +212,7 @@
 </head>
 <body>
 
-  <!-- Top Bar -->
+  <!-- Top Bar (Screenshot Style) -->
   <div class="top-bar">
     <div class="left-icons">
       <span>𝕏</span>
@@ -227,7 +251,7 @@
     <div id="proposalList"></div>
   </div>
 
-  <!-- Create Proposal Modal -->
+  <!-- Your Original Modal -->
   <div id="proposalModal" class="modal">
     <div class="modal-content">
       <h2 style="margin-bottom:20px;">Create New Proposal</h2>
@@ -258,6 +282,7 @@
     let walletAddress = null;
     let proposals = [];
 
+    // === YOUR ORIGINAL FUNCTIONS (100% unchanged) ===
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
         alert("Please install Phantom wallet → phantom.app");
@@ -326,7 +351,7 @@
       }).join('');
     }
 
-    // Demo data
+    // Demo data (your original)
     proposals = [{ title: "Increase marketing budget by 20%", desc: "Allocate additional SOL to community growth and partnerships", endTime: Date.now() + 86400000 }];
     renderProposals();
   </script>
