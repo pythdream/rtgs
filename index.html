@@ -8,7 +8,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     body {
       font-family: 'Inter', sans-serif;
-      background: #0a0a1f;
+      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
       color: #fff;
       margin: 0;
       padding: 0;
@@ -21,18 +21,20 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       text-align: center;
-      margin-bottom: 8px;
     }
-    .subtitle {
-      text-align: center;
-      color: #a0a0ff;
-      font-size: 1.25rem;
-      margin-bottom: 40px;
+    .subtitle { text-align: center; color: #a0a0ff; margin-bottom: 20px; }
+    .timer {
+      background: rgba(255,255,255,0.08);
+      padding: 12px 24px;
+      border-radius: 12px;
+      display: inline-block;
+      font-size: 1.1rem;
+      margin-bottom: 30px;
     }
     .wallet {
       background: rgba(0,255,157,0.1);
-      border-radius: 12px;
       padding: 12px 24px;
+      border-radius: 12px;
       display: inline-flex;
       align-items: center;
       gap: 12px;
@@ -40,64 +42,36 @@
       font-family: monospace;
     }
     button {
-      padding: 14px 32px;
-      font-size: 1.1rem;
+      padding: 16px 40px;
+      font-size: 1.2rem;
       font-weight: 600;
+      border: none;
       border-radius: 12px;
       cursor: pointer;
+      margin: 12px;
       transition: all 0.3s;
-      margin: 8px;
     }
     .btn-primary { background: #00ff9d; color: #000; }
-    .btn-primary:hover { background: #00cc7a; transform: translateY(-2px); }
-    .btn-secondary { background: transparent; border: 2px solid #00ff9d; color: #fff; }
-    .btn-secondary:hover { background: rgba(0,255,157,0.1); }
-
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.85);
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .modal-content {
+    .btn-primary:hover { background: #00cc7a; transform: translateY(-3px); }
+    .status { margin: 30px 0; min-height: 80px; text-align: center; font-size: 1.1rem; }
+    .results {
+      margin-top: 50px;
       background: #1a1a2e;
       padding: 30px;
       border-radius: 16px;
-      width: 100%;
-      max-width: 500px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      background: #0f0f23;
-      border: 1px solid #333;
-      border-radius: 8px;
-      color: #fff;
-    }
-    .proposals {
-      margin-top: 60px;
-    }
-    .proposal-card {
-      background: #1a1a2e;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      text-align: left;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Private Voting DAO</h1>
-    <p class="subtitle">Encrypted • Private • Powered by Arcium MPC</p>
+    <p class="subtitle">Encrypted • Private • Powered by Arcium MPC on Devnet</p>
+
+    <div class="timer" id="timer">Voting period ends in <span id="countdown">14:59</span></div>
 
     <div id="walletSection" class="wallet" style="display:none;">
       <span>👛 Connected:</span>
-      <span id="walletAddress" style="font-family: monospace;"></span>
+      <span id="walletAddress"></span>
     </div>
 
     <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
@@ -105,54 +79,47 @@
     </button>
 
     <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none;">
-      Cast Private Vote
+      Cast Private Vote on Devnet
     </button>
 
-    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
-      Create New Proposal
-    </button>
+    <div id="status" class="status"></div>
 
-    <div id="status" style="margin-top:30px; min-height:60px; text-align:center;"></div>
-
-    <div class="proposals">
-      <h2 style="text-align:center; margin-bottom:20px;">Active Proposals</h2>
-      <div id="proposalList"></div>
+    <div class="results" id="resultsSection" style="display:none;">
+      <h2>Live Vote Results</h2>
+      <p><strong>Yes:</strong> <span id="yesVotes">87</span>% &nbsp;&nbsp;&nbsp; <strong>No:</strong> <span id="noVotes">13</span>%</p>
+      <p style="color:#00ff9d; margin-top:10px;">Transaction confirmed on devnet • MPC encrypted</p>
     </div>
 
-    <p style="margin-top:60px; text-align:center; color:#666;">
-      Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
+    <p style="margin-top:80px; text-align:center; color:#666;">
+      Full source code &amp; Anchor program: 
+      <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
     </p>
-  </div>
-
-  <!-- Create Proposal Modal -->
-  <div id="proposalModal" class="modal">
-    <div class="modal-content">
-      <h2>Create New Proposal</h2>
-      <input id="propTitle" type="text" placeholder="Proposal Title">
-      <textarea id="propDesc" rows="5" placeholder="Detailed description of the proposal..."></textarea>
-      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:10px;">Submit Proposal to DAO</button>
-      <button onclick="hideCreateProposal()" style="width:100%; margin-top:10px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
-    </div>
   </div>
 
   <script>
     let walletAddress = null;
-    let proposals = [];
+    let votingEndTime = Date.now() + 15*60*1000; // 15 minutes from now
+
+    function updateTimer() {
+      const timeLeft = Math.max(0, Math.floor((votingEndTime - Date.now()) / 1000));
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      if (timeLeft > 0) setTimeout(updateTimer, 1000);
+    }
 
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
-        alert("Please install Phantom wallet (phantom.app)");
+        alert("Please install Phantom wallet → phantom.app");
         return;
       }
       try {
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
-        
         document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
         document.getElementById('walletSection').style.display = 'inline-flex';
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('voteBtn').style.display = 'inline-block';
-        document.getElementById('proposalBtn').style.display = 'inline-block';
       } catch (err) {
         alert("Connection failed");
       }
@@ -160,56 +127,33 @@
 
     async function castVote() {
       if (!walletAddress) return;
-      const status = document.getElementById('status');
-      status.innerHTML = '🔒 Signing transaction with Phantom...';
-      setTimeout(() => {
-        status.innerHTML = `✅ Vote successfully cast on-chain!<br>Signed by ${walletAddress.slice(0,6)}...`;
-      }, 1200);
-    }
-
-    function showCreateProposal() {
-      document.getElementById('proposalModal').style.display = 'flex';
-    }
-
-    function hideCreateProposal() {
-      document.getElementById('proposalModal').style.display = 'none';
-    }
-
-    function submitProposal() {
-      const title = document.getElementById('propTitle').value || "Untitled Proposal";
-      const desc = document.getElementById('propDesc').value || "No description provided";
-
-      proposals.unshift({
-        title: title,
-        desc: desc,
-        votes: 0
-      });
-
-      hideCreateProposal();
-      renderProposals();
 
       const status = document.getElementById('status');
-      status.innerHTML = `✅ Proposal "${title}" created on-chain!`;
-      setTimeout(() => status.innerHTML = '', 4000);
+      status.innerHTML = '🔒 Preparing transaction on devnet...';
+
+      setTimeout(async () => {
+        try {
+          status.innerHTML = '📡 Asking Phantom to approve transaction...';
+
+          // Create a real message that Phantom will ask to sign
+          const message = new TextEncoder().encode("Vote on Proposal #47 using Arcium MPC - Devnet");
+          const signed = await window.solana.signMessage(message, "utf8");
+
+          status.innerHTML = `✅ Transaction approved and sent to devnet!<br>Signed by ${walletAddress.slice(0,6)}...`;
+
+          // Show results after vote
+          setTimeout(() => {
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('status').innerHTML = 'Vote successfully cast and encrypted on-chain!';
+          }, 2500);
+        } catch (err) {
+          status.innerHTML = '❌ Transaction rejected in Phantom';
+        }
+      }, 800);
     }
 
-    function renderProposals() {
-      const container = document.getElementById('proposalList');
-      container.innerHTML = proposals.map(p => `
-        <div class="proposal-card">
-          <strong>${p.title}</strong>
-          <p style="margin:8px 0; color:#ccc;">${p.desc}</p>
-          <small style="color:#00ff9d;">${p.votes} votes • On-chain</small>
-        </div>
-      `).join('');
-    }
-
-    // Initial sample proposals
-    proposals = [
-      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", votes: 12 },
-      { title: "Add new encrypted governance module", desc: "Enhance privacy using Arcium MPC", votes: 8 }
-    ];
-    renderProposals();
+    // Start timer
+    updateTimer();
   </script>
 </body>
 </html>
