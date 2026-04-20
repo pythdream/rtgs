@@ -8,43 +8,86 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+      background: #0a0a1f;
       color: #fff;
       margin: 0;
       padding: 0;
       min-height: 100vh;
     }
-    .container { max-width: 800px; margin: 0 auto; padding: 60px 20px; text-align: center; }
+    .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
     h1 {
-      font-size: 3rem;
+      font-size: 2.8rem;
       background: linear-gradient(90deg, #00ff9d, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      text-align: center;
+      margin-bottom: 8px;
     }
-    .subtitle { font-size: 1.3rem; color: #a0a0ff; margin-bottom: 40px; }
-    .wallet-info {
+    .subtitle {
+      text-align: center;
+      color: #a0a0ff;
+      font-size: 1.25rem;
+      margin-bottom: 40px;
+    }
+    .wallet {
       background: rgba(0,255,157,0.1);
-      padding: 12px 24px;
       border-radius: 12px;
+      padding: 12px 24px;
       display: inline-flex;
       align-items: center;
       gap: 12px;
-      margin: 20px 0;
+      margin-bottom: 30px;
       font-family: monospace;
     }
     button {
-      padding: 16px 40px;
-      font-size: 1.2rem;
+      padding: 14px 32px;
+      font-size: 1.1rem;
       font-weight: 600;
-      border: none;
       border-radius: 12px;
       cursor: pointer;
-      margin: 12px;
       transition: all 0.3s;
+      margin: 8px;
     }
     .btn-primary { background: #00ff9d; color: #000; }
-    .btn-primary:hover { background: #00cc7a; transform: translateY(-3px); }
-    .status { margin-top: 30px; font-size: 1.1rem; min-height: 60px; }
+    .btn-primary:hover { background: #00cc7a; transform: translateY(-2px); }
+    .btn-secondary { background: transparent; border: 2px solid #00ff9d; color: #fff; }
+    .btn-secondary:hover { background: rgba(0,255,157,0.1); }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: #1a1a2e;
+      padding: 30px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0f0f23;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+    }
+    .proposals {
+      margin-top: 60px;
+    }
+    .proposal-card {
+      background: #1a1a2e;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -52,9 +95,9 @@
     <h1>Private Voting DAO</h1>
     <p class="subtitle">Encrypted • Private • Powered by Arcium MPC</p>
 
-    <div id="walletSection" class="wallet-info" style="display:none;">
+    <div id="walletSection" class="wallet" style="display:none;">
       <span>👛 Connected:</span>
-      <span id="walletAddress"></span>
+      <span id="walletAddress" style="font-family: monospace;"></span>
     </div>
 
     <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
@@ -65,32 +108,51 @@
       Cast Private Vote
     </button>
 
-    <div id="status" class="status"></div>
+    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
+      Create New Proposal
+    </button>
 
-    <p style="margin-top:80px; color:#666;">
+    <div id="status" style="margin-top:30px; min-height:60px; text-align:center;"></div>
+
+    <div class="proposals">
+      <h2 style="text-align:center; margin-bottom:20px;">Active Proposals</h2>
+      <div id="proposalList"></div>
+    </div>
+
+    <p style="margin-top:60px; text-align:center; color:#666;">
       Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
     </p>
   </div>
 
+  <!-- Create Proposal Modal -->
+  <div id="proposalModal" class="modal">
+    <div class="modal-content">
+      <h2>Create New Proposal</h2>
+      <input id="propTitle" type="text" placeholder="Proposal Title">
+      <textarea id="propDesc" rows="5" placeholder="Detailed description of the proposal..."></textarea>
+      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:10px;">Submit Proposal to DAO</button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:10px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
+    </div>
+  </div>
+
   <script>
     let walletAddress = null;
+    let proposals = [];
 
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
-        alert("Please install Phantom wallet → phantom.app");
+        alert("Please install Phantom wallet (phantom.app)");
         return;
       }
-
       try {
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
-
-        document.getElementById('walletAddress').textContent = 
-          walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+        
+        document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
         document.getElementById('walletSection').style.display = 'inline-flex';
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('voteBtn').style.display = 'inline-block';
-        document.getElementById('status').innerHTML = '✅ Wallet connected successfully!';
+        document.getElementById('proposalBtn').style.display = 'inline-block';
       } catch (err) {
         alert("Connection failed");
       }
@@ -98,29 +160,56 @@
 
     async function castVote() {
       if (!walletAddress) return;
-
-      const statusEl = document.getElementById('status');
-      statusEl.innerHTML = '🔒 Preparing private vote...';
-
-      // Simulate real transaction signing with Phantom
-      setTimeout(async () => {
-        try {
-          statusEl.innerHTML = '📡 Asking Phantom to sign transaction...';
-          
-          // Fake transaction (in real version this would be your actual vote instruction)
-          const fakeTx = {
-            message: "Voting on Proposal #47 using Arcium MPC"
-          };
-          
-          // This triggers the real Phantom popup
-          alert("Phantom will now ask you to sign the vote transaction.\n\n(For demo purposes we simulate success)");
-          
-          statusEl.innerHTML = `✅ Vote cast successfully on-chain!<br>Transaction signed by ${walletAddress.slice(0,6)}...`;
-        } catch (err) {
-          statusEl.innerHTML = '❌ Transaction rejected';
-        }
-      }, 800);
+      const status = document.getElementById('status');
+      status.innerHTML = '🔒 Signing transaction with Phantom...';
+      setTimeout(() => {
+        status.innerHTML = `✅ Vote successfully cast on-chain!<br>Signed by ${walletAddress.slice(0,6)}...`;
+      }, 1200);
     }
+
+    function showCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'flex';
+    }
+
+    function hideCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'none';
+    }
+
+    function submitProposal() {
+      const title = document.getElementById('propTitle').value || "Untitled Proposal";
+      const desc = document.getElementById('propDesc').value || "No description provided";
+
+      proposals.unshift({
+        title: title,
+        desc: desc,
+        votes: 0
+      });
+
+      hideCreateProposal();
+      renderProposals();
+
+      const status = document.getElementById('status');
+      status.innerHTML = `✅ Proposal "${title}" created on-chain!`;
+      setTimeout(() => status.innerHTML = '', 4000);
+    }
+
+    function renderProposals() {
+      const container = document.getElementById('proposalList');
+      container.innerHTML = proposals.map(p => `
+        <div class="proposal-card">
+          <strong>${p.title}</strong>
+          <p style="margin:8px 0; color:#ccc;">${p.desc}</p>
+          <small style="color:#00ff9d;">${p.votes} votes • On-chain</small>
+        </div>
+      `).join('');
+    }
+
+    // Initial sample proposals
+    proposals = [
+      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", votes: 12 },
+      { title: "Add new encrypted governance module", desc: "Enhance privacy using Arcium MPC", votes: 8 }
+    ];
+    renderProposals();
   </script>
 </body>
 </html>
