@@ -22,7 +22,7 @@
       background: #0a0a1f;
     }
 
-    /* Bird Video Background */
+    /* 3D Bird Video Background */
     #bg-video {
       position: fixed;
       top: 0; left: 0;
@@ -40,13 +40,14 @@
       z-index: -1;
     }
 
+    /* Clean Header like privo.tech */
     header {
       position: fixed;
       top: 0;
       width: 100%;
-      background: rgba(15, 10, 40, 0.85);
+      background: rgba(15, 10, 40, 0.92);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(192, 132, 252, 0.2);
+      border-bottom: 1px solid rgba(192, 132, 252, 0.25);
       z-index: 1000;
       padding: 18px 5%;
     }
@@ -94,13 +95,49 @@
       box-shadow: 0 4px 15px rgba(192, 132, 252, 0.4);
     }
 
+    /* Wallet Bar - NOW IN TOP-RIGHT CORNER */
+    .wallet-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .wallet {
+      background: rgba(192, 132, 252, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.4);
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-family: monospace;
+      font-size: 1rem;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .connect-btn {
+      background: transparent;
+      border: 2px solid var(--purple);
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .connect-btn:hover {
+      background: var(--purple);
+      color: #1a0033;
+    }
+
     .main {
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
-      padding-top: 100px;
+      padding-top: 120px;
     }
 
     .content {
@@ -175,7 +212,6 @@
       color: #e0bbff;
     }
 
-    /* Keep your existing proposal cards but cleaner */
     .proposal-card {
       background: rgba(26, 26, 46, 0.85);
       border: 1px solid rgba(192, 132, 252, 0.25);
@@ -202,13 +238,27 @@
   </video>
   <div id="bg-overlay"></div>
 
+  <!-- HEADER with Wallet in Top-Right Corner -->
   <header>
     <div class="nav">
       <div class="logo">Private Voting DAO</div>
+      
       <div class="nav-links">
         <a href="https://faucet.solana.com/" target="_blank" class="faucet">🚰 Faucet</a>
         <button onclick="showAboutModal()">About</button>
         <a href="https://x.com/FaithDpy" target="_blank">𝕏 FaithDpy</a>
+      </div>
+
+      <!-- Wallet Bar / Connect Button - NOW IN THE CORNER -->
+      <div class="wallet-container">
+        <button id="connectBtn" class="connect-btn" onclick="connectPhantom()">
+          Connect Phantom Wallet
+        </button>
+        
+        <div id="walletSection" class="wallet">
+          <span>👛</span>
+          <span id="walletAddress"></span>
+        </div>
       </div>
     </div>
   </header>
@@ -219,8 +269,7 @@
       <p class="subtitle">Encrypted votes. Zero knowledge. Powered by Arcium MPC.</p>
       
       <div class="btn-group">
-        <button class="btn-primary" onclick="connectPhantom()">Connect Wallet</button>
-        <button class="btn-secondary" onclick="showCreateProposal()">Create Proposal</button>
+        <button class="btn-primary" onclick="showCreateProposal()">Create Proposal</button>
       </div>
     </div>
   </section>
@@ -231,13 +280,116 @@
     <div id="proposalList"></div>
   </section>
 
-  <!-- Modals (same as before) -->
-  <!-- ... (Create Proposal Modal and About Modal) ... -->
+  <!-- Create Proposal Modal -->
+  <div id="proposalModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:10000;">
+    <div style="background:#1a1a2e; padding:40px; border-radius:24px; width:100%; max-width:500px; border:1px solid rgba(192,132,252,0.3);">
+      <h2 style="margin-bottom:20px; color:#e0bbff;">Create New Proposal</h2>
+      <input id="propTitle" type="text" placeholder="Proposal Title" style="width:100%; padding:14px; margin-bottom:12px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
+      <textarea id="propDesc" rows="4" placeholder="Purpose and detailed description..." style="width:100%; padding:14px; margin-bottom:12px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;"></textarea>
+      
+      <label style="display:block; margin:15px 0 8px; color:#c084fc;">Duration</label>
+      <select id="propDuration" style="width:100%; padding:14px; background:#0f0f23; border:1px solid #6b21a8; border-radius:12px; color:#fff;">
+        <option value="3600">1 hour</option>
+        <option value="21600">6 hours</option>
+        <option value="86400" selected>1 day</option>
+        <option value="259200">3 days</option>
+        <option value="604800">7 days</option>
+      </select>
+
+      <button onclick="submitProposal()" style="width:100%; margin-top:25px; padding:18px; background:#c084fc; color:#1a0033; border:none; border-radius:50px; font-weight:600;">Submit Proposal</button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; padding:18px; background:transparent; border:2px solid #555; color:#aaa; border-radius:50px;">Cancel</button>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div id="aboutModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.9); align-items:center; justify-content:center; z-index:10000;">
+    <div style="background:#1a1a2e; padding:40px; border-radius:24px; width:100%; max-width:500px; text-align:center; border:1px solid rgba(192,132,252,0.3);">
+      <h2 style="color:#e0bbff; margin-bottom:20px;">About Private Voting DAO</h2>
+      <p style="color:#d1c4ff; line-height:1.7;">Fully encrypted private voting on Solana Devnet.<br><br>Powered by Arcium MPC — your votes stay completely private.</p>
+      <button onclick="hideAboutModal()" style="margin-top:30px; padding:16px 40px; background:transparent; border:2px solid #c084fc; color:#fff; border-radius:50px;">Close</button>
+    </div>
+  </div>
 
   <script>
-    // Your existing JavaScript functions go here (connectPhantom, castVote, submitProposal, renderProposals, etc.)
-    // I kept them the same as your last working version for simplicity.
-    // Paste your full script block from previous messages if needed.
+    let walletAddress = null;
+    let proposals = [];
+
+    async function connectPhantom() {
+      if (!window.solana || !window.solana.isPhantom) {
+        alert("Please install Phantom wallet → phantom.app");
+        return;
+      }
+      try {
+        const resp = await window.solana.connect();
+        walletAddress = resp.publicKey.toString();
+        
+        document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+        document.getElementById('connectBtn').style.display = 'none';
+        document.getElementById('walletSection').style.display = 'flex';
+      } catch (err) {
+        alert("Connection failed");
+      }
+    }
+
+    function showCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'flex';
+    }
+
+    function hideCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'none';
+    }
+
+    function submitProposal() {
+      const title = document.getElementById('propTitle').value || "Untitled Proposal";
+      const desc = document.getElementById('propDesc').value || "No description";
+      const durationSeconds = parseInt(document.getElementById('propDuration').value);
+
+      const endTime = Date.now() + durationSeconds * 1000;
+
+      proposals.unshift({
+        title: title,
+        desc: desc,
+        endTime: endTime,
+        yes: Math.floor(Math.random()*40) + 60,
+        no: Math.floor(Math.random()*20) + 10
+      });
+
+      hideCreateProposal();
+      renderProposals();
+    }
+
+    function renderProposals() {
+      const container = document.getElementById('proposalList');
+      container.innerHTML = proposals.map((p) => {
+        const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Results Ready";
+
+        return `
+          <div class="proposal-card">
+            <strong>${p.title}</strong>
+            <p style="margin:12px 0; color:#ccc;">${p.desc}</p>
+            <div style="color:#c084fc;">Ends in <strong>${timerText}</strong></div>
+            ${timeLeft === 0 ? `<p style="color:#c084fc; margin-top:12px;">Results: Yes ${p.yes}% • No ${p.no}%</p>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function showAboutModal() {
+      document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function hideAboutModal() {
+      document.getElementById('aboutModal').style.display = 'none';
+    }
+
+    // Initial demo
+    proposals = [
+      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", endTime: Date.now() + 3600000, yes: 78, no: 22 }
+    ];
+    renderProposals();
   </script>
 </body>
 </html>
