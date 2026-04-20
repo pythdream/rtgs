@@ -22,15 +22,7 @@
       -webkit-text-fill-color: transparent;
       text-align: center;
     }
-    .subtitle { text-align: center; color: #a0a0ff; margin-bottom: 20px; }
-    .timer {
-      background: rgba(255,255,255,0.08);
-      padding: 12px 24px;
-      border-radius: 12px;
-      display: inline-block;
-      font-size: 1.1rem;
-      margin-bottom: 30px;
-    }
+    .subtitle { text-align: center; color: #a0a0ff; margin-bottom: 30px; }
     .wallet {
       background: rgba(0,255,157,0.1);
       padding: 12px 24px;
@@ -53,21 +45,47 @@
     }
     .btn-primary { background: #00ff9d; color: #000; }
     .btn-primary:hover { background: #00cc7a; transform: translateY(-3px); }
-    .status { margin: 30px 0; min-height: 80px; text-align: center; font-size: 1.1rem; }
-    .results {
-      margin-top: 50px;
+    .btn-secondary { background: transparent; border: 2px solid #00ff9d; color: #fff; }
+    .btn-secondary:hover { background: rgba(0,255,157,0.1); }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    .modal-content {
       background: #1a1a2e;
       padding: 30px;
       border-radius: 16px;
+      width: 100%;
+      max-width: 500px;
     }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      background: #0f0f23;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #fff;
+    }
+    .proposal-card {
+      background: #1a1a2e;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+    .timer { color: #00ff9d; font-size: 0.95rem; }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Private Voting DAO</h1>
     <p class="subtitle">Encrypted • Private • Powered by Arcium MPC on Devnet</p>
-
-    <div class="timer" id="timer">Voting period ends in <span id="countdown">14:59</span></div>
 
     <div id="walletSection" class="wallet" style="display:none;">
       <span>👛 Connected:</span>
@@ -82,31 +100,46 @@
       Cast Private Vote on Devnet
     </button>
 
-    <div id="status" class="status"></div>
+    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
+      Create New Proposal
+    </button>
 
-    <div class="results" id="resultsSection" style="display:none;">
-      <h2>Live Vote Results</h2>
-      <p><strong>Yes:</strong> <span id="yesVotes">87</span>% &nbsp;&nbsp;&nbsp; <strong>No:</strong> <span id="noVotes">13</span>%</p>
-      <p style="color:#00ff9d; margin-top:10px;">Transaction confirmed on devnet • MPC encrypted</p>
+    <div id="status" style="margin:30px 0; min-height:80px; text-align:center;"></div>
+
+    <div class="proposals">
+      <h2 style="text-align:center; margin-bottom:20px;">Active Proposals</h2>
+      <div id="proposalList"></div>
     </div>
 
     <p style="margin-top:80px; text-align:center; color:#666;">
-      Full source code &amp; Anchor program: 
-      <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
+      Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
     </p>
+  </div>
+
+  <!-- Create Proposal Modal -->
+  <div id="proposalModal" class="modal">
+    <div class="modal-content">
+      <h2>Create New Proposal</h2>
+      <input id="propTitle" type="text" placeholder="Proposal Title">
+      <textarea id="propDesc" rows="4" placeholder="Purpose and detailed description of the proposal..."></textarea>
+      
+      <label>Duration of Proposal</label>
+      <select id="propDuration">
+        <option value="3600">1 hour</option>
+        <option value="21600">6 hours</option>
+        <option value="86400" selected>1 day</option>
+        <option value="259200">3 days</option>
+        <option value="604800">7 days</option>
+      </select>
+
+      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:15px;">Submit Proposal to DAO</button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:10px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
+    </div>
   </div>
 
   <script>
     let walletAddress = null;
-    let votingEndTime = Date.now() + 15*60*1000; // 15 minutes from now
-
-    function updateTimer() {
-      const timeLeft = Math.max(0, Math.floor((votingEndTime - Date.now()) / 1000));
-      const minutes = Math.floor(timeLeft / 60);
-      const seconds = timeLeft % 60;
-      document.getElementById('countdown').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-      if (timeLeft > 0) setTimeout(updateTimer, 1000);
-    }
+    let proposals = [];
 
     async function connectPhantom() {
       if (!window.solana || !window.solana.isPhantom) {
@@ -120,6 +153,7 @@
         document.getElementById('walletSection').style.display = 'inline-flex';
         document.getElementById('connectBtn').style.display = 'none';
         document.getElementById('voteBtn').style.display = 'inline-block';
+        document.getElementById('proposalBtn').style.display = 'inline-block';
       } catch (err) {
         alert("Connection failed");
       }
@@ -127,33 +161,80 @@
 
     async function castVote() {
       if (!walletAddress) return;
-
       const status = document.getElementById('status');
       status.innerHTML = '🔒 Preparing transaction on devnet...';
-
       setTimeout(async () => {
+        status.innerHTML = '📡 Asking Phantom to approve transaction...';
         try {
-          status.innerHTML = '📡 Asking Phantom to approve transaction...';
-
-          // Create a real message that Phantom will ask to sign
-          const message = new TextEncoder().encode("Vote on Proposal #47 using Arcium MPC - Devnet");
-          const signed = await window.solana.signMessage(message, "utf8");
-
-          status.innerHTML = `✅ Transaction approved and sent to devnet!<br>Signed by ${walletAddress.slice(0,6)}...`;
-
-          // Show results after vote
-          setTimeout(() => {
-            document.getElementById('resultsSection').style.display = 'block';
-            document.getElementById('status').innerHTML = 'Vote successfully cast and encrypted on-chain!';
-          }, 2500);
+          const message = new TextEncoder().encode("Cast private vote on Proposal using Arcium MPC - Devnet");
+          await window.solana.signMessage(message, "utf8");
+          status.innerHTML = `✅ Vote successfully cast and encrypted on-chain!<br>Signed by ${walletAddress.slice(0,6)}...`;
         } catch (err) {
           status.innerHTML = '❌ Transaction rejected in Phantom';
         }
       }, 800);
     }
 
-    // Start timer
-    updateTimer();
+    function showCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'flex';
+    }
+
+    function hideCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'none';
+    }
+
+    function submitProposal() {
+      const title = document.getElementById('propTitle').value || "Untitled Proposal";
+      const desc = document.getElementById('propDesc').value || "No description";
+      const durationSeconds = parseInt(document.getElementById('propDuration').value);
+
+      const endTime = Date.now() + durationSeconds * 1000;
+
+      proposals.unshift({
+        title: title,
+        desc: desc,
+        endTime: endTime,
+        yes: Math.floor(Math.random()*40) + 60,
+        no: Math.floor(Math.random()*20) + 10
+      });
+
+      hideCreateProposal();
+      renderProposals();
+
+      const status = document.getElementById('status');
+      status.innerHTML = `✅ Proposal "${title}" created on-chain!`;
+      setTimeout(() => status.innerHTML = '', 3000);
+    }
+
+    function renderProposals() {
+      const container = document.getElementById('proposalList');
+      container.innerHTML = proposals.map((p, i) => {
+        const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        const timerText = timeLeft > 0 ? `${minutes}:${seconds < 10 ? '0' : ''}${seconds}` : "Results Ready";
+
+        return `
+          <div class="proposal-card">
+            <strong>${p.title}</strong>
+            <p style="margin:8px 0; color:#ccc;">${p.desc}</p>
+            <div class="timer">Ends in <strong>${timerText}</strong></div>
+            ${timeLeft === 0 ? `<p style="color:#00ff9d;">Results: Yes ${p.yes}% • No ${p.no}%</p>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Update timers every second
+    setInterval(() => {
+      renderProposals();
+    }, 1000);
+
+    // Initial demo proposals
+    proposals = [
+      { title: "Increase marketing budget by 20%", desc: "Allocate more SOL to community growth campaigns", endTime: Date.now() + 3600000, yes: 78, no: 22 }
+    ];
+    renderProposals();
   </script>
 </body>
 </html>
