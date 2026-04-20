@@ -15,11 +15,75 @@
       padding: 0;
       min-height: 100vh;
     }
+
+    /* Header / Nav - matching style from privo.tech */
+    header {
+      background: rgba(15, 15, 35, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(0, 255, 157, 0.15);
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 600;
+      background: linear-gradient(90deg, #00ff9d, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-btn {
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .nav-btn:hover {
+      background: rgba(0, 255, 157, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .x-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .x-link:hover {
+      color: #00ff9d;
+    }
+
     .container { 
       max-width: 900px; 
-      margin: 0 auto; 
-      padding: 40px 20px; 
+      margin: 40px auto; 
+      padding: 0 20px; 
     }
+
     h1 {
       font-size: 2.8rem;
       background: linear-gradient(90deg, #00ff9d, #00ccff);
@@ -32,6 +96,7 @@
       color: #a0a0ff; 
       margin-bottom: 30px; 
     }
+
     .wallet {
       background: rgba(0,255,157,0.1);
       padding: 12px 24px;
@@ -42,6 +107,7 @@
       margin-bottom: 30px;
       font-family: monospace;
     }
+
     button {
       padding: 16px 40px;
       font-size: 1.2rem;
@@ -68,6 +134,7 @@
     .btn-secondary:hover { 
       background: rgba(0,255,157,0.1); 
     }
+
     .modal {
       display: none;
       position: fixed;
@@ -84,6 +151,7 @@
       width: 100%;
       max-width: 500px;
     }
+
     input, textarea, select {
       width: 100%;
       padding: 12px;
@@ -93,6 +161,7 @@
       border-radius: 8px;
       color: #fff;
     }
+
     .proposal-card {
       background: #1a1a2e;
       padding: 20px;
@@ -104,27 +173,60 @@
       color: #00ff9d; 
       font-size: 0.95rem; 
     }
+
+    /* Extra styling for faucet & about */
+    .faucet-info {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #ccc;
+    }
   </style>
 </head>
 <body>
+
+  <!-- HEADER / NAV (copied style + features from privo.tech) -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">Private Voting DAO</div>
+      
+      <div class="nav-links">
+        <!-- Faucet Button -->
+        <a href="https://faucet.solana.com/" target="_blank" class="nav-btn" style="background:#00ff9d; color:#000;">
+          🚰 Faucet
+        </a>
+
+        <!-- About Button -->
+        <button onclick="showAboutModal()" class="nav-btn" style="border:1px solid #00ff9d; background:transparent;">
+          About
+        </button>
+
+        <!-- X Link -->
+        <a href="https://x.com/FaithDpy" target="_blank" class="x-link">
+          <span style="font-size:1.3rem;">𝕏</span>
+          FaithDpy
+        </a>
+      </div>
+
+      <div id="walletSection" class="wallet" style="display:none; margin:0;">
+        <span>👛</span>
+        <span id="walletAddress"></span>
+      </div>
+    </div>
+  </header>
+
   <div class="container">
     <h1>Private Voting DAO</h1>
     <p class="subtitle">Encrypted • Private • Powered by Arcium MPC on Devnet</p>
 
-    <div id="walletSection" class="wallet" style="display:none;">
-      <span>👛 Connected:</span>
-      <span id="walletAddress"></span>
-    </div>
-
-    <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
+    <button id="connectBtn" class="btn-primary" onclick="connectPhantom()" style="display:block; margin:0 auto 30px;">
       Connect Phantom Wallet
     </button>
 
-    <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none;">
+    <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none; margin:0 auto 30px;">
       Cast Private Vote on Devnet
     </button>
 
-    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
+    <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none; margin:0 auto 30px;">
       Create New Proposal
     </button>
 
@@ -140,7 +242,7 @@
     </p>
   </div>
 
-  <!-- Create Proposal Modal -->
+  <!-- Create Proposal Modal (unchanged) -->
   <div id="proposalModal" class="modal">
     <div class="modal-content">
       <h2>Create New Proposal</h2>
@@ -161,6 +263,19 @@
     </div>
   </div>
 
+  <!-- About Modal -->
+  <div id="aboutModal" class="modal">
+    <div class="modal-content">
+      <h2>About Private Voting DAO</h2>
+      <p style="line-height:1.7; color:#ccc;">
+        Fully encrypted private voting on Solana Devnet.<br><br>
+        Powered by Arcium MPC — votes stay completely private until results are revealed.<br><br>
+        Built for testing confidential governance. Not affiliated with main Arcium team.
+      </p>
+      <button onclick="hideAboutModal()" style="width:100%; margin-top:20px; background:none; border:1px solid #555; color:#aaa; padding:14px;">Close</button>
+    </div>
+  </div>
+
   <script>
     let walletAddress = null;
     let proposals = [];
@@ -176,8 +291,8 @@
         document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
         document.getElementById('walletSection').style.display = 'inline-flex';
         document.getElementById('connectBtn').style.display = 'none';
-        document.getElementById('voteBtn').style.display = 'inline-block';
-        document.getElementById('proposalBtn').style.display = 'inline-block';
+        document.getElementById('voteBtn').style.display = 'block';
+        document.getElementById('proposalBtn').style.display = 'block';
       } catch (err) {
         alert("Connection failed");
       }
@@ -185,10 +300,8 @@
 
     async function castVote() {
       if (!walletAddress) return;
-      
       const status = document.getElementById('status');
       status.innerHTML = '🔒 Preparing transaction on devnet...';
-
       setTimeout(async () => {
         status.innerHTML = '📡 Asking Phantom to approve transaction...';
         try {
@@ -251,6 +364,15 @@
           </div>
         `;
       }).join('');
+    }
+
+    // About modal functions
+    function showAboutModal() {
+      document.getElementById('aboutModal').style.display = 'flex';
+    }
+
+    function hideAboutModal() {
+      document.getElementById('aboutModal').style.display = 'none';
     }
 
     // Update timers every second
