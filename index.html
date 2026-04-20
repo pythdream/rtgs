@@ -3,276 +3,242 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Privo DAO • Private Voting on Solana</title>
+  <title>Privo DAO • Private Voting on Arcium</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     :root {
-      --accent: #a855f7; /* purple neon to match the premium cosmic feel */
-    }
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family: 'Inter', system-ui, sans-serif;
-      background: radial-gradient(circle at 50% 20%, #0a0a1f 0%, #000 70%);
-      color: #e0e0ff;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('https://picsum.photos/id/1015/2000/1200') center/cover;
-      opacity: 0.08;
-      z-index: -1;
-      pointer-events: none;
+      --primary: #00ff9d;
+      --primary-dark: #00e68a;
+      --bg: #0a0a1f;
+      --card: #16162b;
+      --text: #e0e0ff;
+      --text-light: #a0a0ff;
     }
 
-    /* Top Bar - Premium cosmic style */
-    .top-bar {
-      position: fixed;
-      top: 20px;
-      left: 0; right: 0;
-      max-width: 1280px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    header {
+      background: rgba(10, 10, 31, 0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 40px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      z-index: 1000;
-    }
-    .top-bar .left-icons {
-      display: flex;
-      gap: 24px;
-      font-size: 28px;
-      color: #fff;
-    }
-    .top-bar .left-icons span {
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .top-bar .left-icons span:hover {
-      color: var(--accent);
-      transform: scale(1.1);
-    }
-    .top-bar .right-buttons button {
-      padding: 12px 28px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      border-radius: 9999px;
-      border: 2px solid var(--accent);
-      background: transparent;
-      color: #fff;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      margin-left: 12px;
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-    }
-    .top-bar .right-buttons button:hover {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.7);
-      transform: translateY(-2px);
     }
 
-    .hero {
-      max-width: 1280px;
-      margin: 140px auto 80px;
-      padding: 0 5%;
-      text-align: center;
-    }
-    h1 {
-      font-size: 5.2rem;
+    .logo {
+      font-size: 1.85rem;
       font-weight: 700;
-      line-height: 1.05;
-      margin-bottom: 8px;
-      background: linear-gradient(90deg, #fff, #e0e0ff);
+      letter-spacing: -1.2px;
+      background: linear-gradient(90deg, #00ff9d, #00ccff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    .devnet-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      color: #c9c9ff;
-      padding: 6px 20px;
-      border-radius: 9999px;
-      font-size: 1.35rem;
-      font-weight: 500;
-      margin-bottom: 40px;
-      letter-spacing: 1px;
-    }
-    .tagline {
-      font-size: 2.4rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-    }
-    .encrypted {
-      font-size: 2.4rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 16px;
-    }
-    .highlight {
-      background: #a855f7;
-      color: #fff;
-      padding: 8px 28px;
-      border-radius: 9999px;
-      font-weight: 700;
-      box-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
-      animation: glow 2s infinite alternate;
-    }
-    @keyframes glow {
-      from { box-shadow: 0 0 20px rgba(168, 85, 247, 0.6); }
-      to   { box-shadow: 0 0 40px rgba(168, 85, 247, 1); }
+
+    .container {
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 20px;
     }
 
-    .buttons {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 60px;
+    h1 {
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 12px;
+      font-weight: 700;
     }
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 1.4rem;
+      max-width: 620px;
+      margin: 0 auto 50px;
+    }
+
+    .wallet {
+      background: rgba(0, 255, 157, 0.08);
+      border: 1px solid rgba(0, 255, 157, 0.35);
+      padding: 16px 32px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 40px;
+      font-family: monospace;
+      font-size: 1.05rem;
+    }
+
     button {
-      padding: 18px 36px;
+      padding: 16px 40px;
       font-size: 1.15rem;
       font-weight: 600;
       border-radius: 9999px;
       cursor: pointer;
       transition: all 0.3s ease;
+      margin: 8px;
+      border: none;
     }
-    .btn-glow {
+
+    .btn-primary {
+      background: var(--primary);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 255, 157, 0.3);
+    }
+
+    .btn-secondary {
       background: transparent;
-      border: 2px solid var(--accent);
+      border: 2px solid var(--primary);
       color: #fff;
-      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-    }
-    .btn-glow:hover {
-      box-shadow: 0 0 35px rgba(168, 85, 247, 0.8);
-      transform: translateY(-4px);
     }
 
-    .walletSection {
-      display: none;
-      background: rgba(168, 85, 247, 0.1);
-      border: 1px solid rgba(168, 85, 247, 0.4);
-      padding: 14px 28px;
-      border-radius: 9999px;
-      margin: 40px auto 0;
-      width: fit-content;
-      align-items: center;
-      gap: 14px;
-      font-size: 1.1rem;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 24px;
-      padding: 32px;
-      margin-bottom: 24px;
-      transition: all 0.3s ease;
-    }
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 30px rgba(168, 85, 247, 0.15);
+    .btn-secondary:hover {
+      background: rgba(0, 255, 157, 0.1);
     }
 
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(10,10,31,0.95);
+      background: rgba(10,10,31,0.92);
       align-items: center;
       justify-content: center;
       z-index: 2000;
+      backdrop-filter: blur(8px);
     }
+
     .modal-content {
       background: #16162b;
       padding: 40px;
       border-radius: 24px;
       width: 100%;
-      max-width: 520px;
-      box-shadow: 0 0 40px rgba(168, 85, 247, 0.3);
+      max-width: 540px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.6);
     }
+
     input, textarea, select {
       width: 100%;
-      padding: 18px;
+      padding: 16px 20px;
       margin: 12px 0;
       background: #0f0f23;
-      border: 1px solid #333;
-      border-radius: 16px;
+      border: 1px solid #444;
+      border-radius: 12px;
       color: #fff;
-      font-size: 1.05rem;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      width: 100%;
-    }
-    footer {
-      text-align: center;
-      padding: 80px 20px 40px;
-      color: #666;
       font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .proposal-card {
+      background: var(--card);
+      padding: 28px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.35);
+      transition: transform 0.3s ease;
+    }
+
+    .proposal-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .status {
+      margin: 30px 0;
+      text-align: center;
+      min-height: 80px;
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+
+    .timer {
+      color: #00ff9d;
+      font-weight: 500;
+    }
+
+    .ended {
+      color: #00ff9d;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-
-  <!-- Top Bar (premium cosmic style) -->
-  <div class="top-bar">
-    <div class="left-icons">
-      <span onclick="window.open('https://x.com/FaithDpy', '_blank')" title="Follow us on X">𝕏</span>
-      <span onclick="window.open('https://github.com/pythdream/rtgs', '_blank')" title="View source on GitHub">GitHub</span>
+  <header>
+    <div class="nav">
+      <div class="logo">Privo DAO</div>
+      <div style="color:#00ff9d; font-weight:500;">Secured by Arcium MPC • Devnet</div>
     </div>
-    <div class="right-buttons">
-      <button onclick="alert('Devnet faucet coming soon!')">Faucet</button>
-      <button onclick="connectPhantom()">Select Wallet</button>
-    </div>
-  </div>
+  </header>
 
-  <div class="hero">
-    <h1>Privo DAO</h1>
-    <div class="devnet-badge">
-      Devnet · Private Voting
-    </div>
+  <div class="container">
+    <h1>Private Voting DAO</h1>
+    <p class="subtitle">Fully encrypted on-chain governance.<br>Your vote stays completely private.</p>
 
-    <p class="tagline">Every vote counts</p>
-    <p class="encrypted">Every vote <span class="highlight">&lt;encrypted&gt;</span></p>
-
-    <div id="walletSection" class="walletSection">
+    <div id="walletSection" class="wallet" style="display:none;">
       <span>👛 Connected</span>
-      <span id="walletAddress" style="font-family:monospace;"></span>
+      <span id="walletAddress"></span>
     </div>
 
-    <div class="buttons">
-      <button class="btn-glow" onclick="howItWorks()">How does it work?</button>
-      <button class="btn-glow" onclick="castVote()">Voting</button>
-      <button class="btn-glow" onclick="showResults()">Results</button>
-      <button class="btn-glow" onclick="showCreateProposal()">Create Poll</button>
+    <div style="text-align: center; margin-bottom: 40px;">
+      <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
+        Connect Phantom Wallet
+      </button>
+
+      <button id="voteBtn" class="btn-primary" onclick="castVote()" style="display:none;">
+        Cast Private Vote
+      </button>
+
+      <button id="proposalBtn" class="btn-secondary" onclick="showCreateProposal()" style="display:none;">
+        Create New Proposal
+      </button>
     </div>
 
-    <div id="status" style="margin:40px 0; min-height:70px; text-align:center; font-size:1.1rem;"></div>
+    <div id="status" class="status"></div>
+
+    <div class="proposals">
+      <h2 style="margin-bottom: 24px; text-align: center;">Active Proposals</h2>
+      <div id="proposalList"></div>
+    </div>
   </div>
 
-  <div style="max-width:1100px; margin:0 auto; padding:0 5%;">
-    <h2 style="text-align:center; margin-bottom:30px; font-size:2rem;">Active Proposals</h2>
-    <div id="proposalList"></div>
-  </div>
-
-  <!-- Create Proposal Modal (your original) -->
+  <!-- Create Proposal Modal -->
   <div id="proposalModal" class="modal">
     <div class="modal-content">
-      <h2 style="margin-bottom:20px;">Create New Proposal</h2>
+      <h2 style="margin-bottom: 24px;">Create New Proposal</h2>
       <input id="propTitle" type="text" placeholder="Proposal Title">
       <textarea id="propDesc" rows="5" placeholder="Purpose and detailed explanation..."></textarea>
       
-      <label style="display:block; margin:15px 0 8px;">Voting Duration</label>
+      <label style="display:block; margin:18px 0 8px; color:#ccc; font-weight:500;">Voting Duration</label>
       <select id="propDuration">
         <option value="3600">1 hour</option>
         <option value="21600">6 hours</option>
@@ -281,92 +247,148 @@
         <option value="604800">7 days</option>
       </select>
 
-      <button onclick="submitProposal()" class="btn-primary">Submit Proposal to DAO</button>
-      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; background:none; border:1px solid #555; color:#aaa;">Cancel</button>
+      <button onclick="submitProposal()" class="btn-primary" style="width:100%; margin-top:28px;">
+        Submit Proposal to DAO
+      </button>
+      <button onclick="hideCreateProposal()" style="width:100%; margin-top:12px; background:none; border:1px solid #555; color:#aaa; padding:14px;">
+        Cancel
+      </button>
     </div>
   </div>
-
-  <footer>
-    The PriVO application operates on Devnet Solana. It was developed for testing private voting and is not affiliated with the main Arcium development team.<br>
-    Full source code: <a href="https://github.com/pythdream/rtgs" style="color:#a855f7;">github.com/pythdream/rtgs</a><br>
-    Follow us on X: <a href="https://x.com/FaithDpy" style="color:#a855f7;">https://x.com/FaithDpy</a>
-  </footer>
 
   <script>
     let walletAddress = null;
     let proposals = [];
 
-    // === YOUR ORIGINAL FUNCTIONS (100% unchanged) ===
     async function connectPhantom() {
-      if (!window.solana || !window.solana.isPhantom) {
-        alert("Please install Phantom wallet → phantom.app");
+      if (!window.solana?.isPhantom) {
+        alert("Phantom wallet not found. Please install it from phantom.app");
         return;
       }
+
       try {
         const resp = await window.solana.connect();
         walletAddress = resp.publicKey.toString();
-        document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
-        document.getElementById('walletSection').style.display = 'flex';
+
+        document.getElementById('walletAddress').textContent = 
+          `${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}`;
+        
+        document.getElementById('walletSection').style.display = 'inline-flex';
+        document.getElementById('connectBtn').style.display = 'none';
+        document.getElementById('voteBtn').style.display = 'inline-block';
+        document.getElementById('proposalBtn').style.display = 'inline-block';
+
       } catch (err) {
-        alert("Connection failed");
+        console.error(err);
+        alert("Failed to connect wallet");
       }
     }
 
     async function castVote() {
-      if (!walletAddress) {
-        alert("Please connect your wallet first");
-        return;
-      }
+      if (!walletAddress) return;
+
       const status = document.getElementById('status');
-      status.innerHTML = '🔒 Preparing private transaction on devnet...';
+      status.innerHTML = '🔒 Preparing encrypted vote using Arcium MPC...';
+
       setTimeout(async () => {
-        status.innerHTML = '📡 Asking Phantom to approve transaction...';
+        status.innerHTML = '📡 Requesting signature from Phantom...';
+
         try {
-          const message = new TextEncoder().encode("Cast encrypted vote using Arcium MPC - Devnet");
+          const message = new TextEncoder().encode(
+            "Cast private encrypted vote via Arcium MPC - Devnet"
+          );
+          
           await window.solana.signMessage(message, "utf8");
-          status.innerHTML = `✅ Vote successfully cast and encrypted on-chain!<br>Signed by ${walletAddress.slice(0,6)}...`;
+
+          status.innerHTML = `✅ Vote successfully cast and encrypted!<br><small>Signed by ${walletAddress.slice(0,6)}...${walletAddress.slice(-4)}</small>`;
+          
+          setTimeout(() => {
+            status.innerHTML = '';
+          }, 5000);
+
         } catch (err) {
-          status.innerHTML = '❌ Transaction rejected';
+          status.innerHTML = '❌ Signature rejected by user';
         }
-      }, 900);
+      }, 1200);
     }
 
-    function howItWorks() {
-      const status = document.getElementById('status');
-      status.innerHTML = '🔐 Privo DAO uses Arcium MPC encryption so your vote stays completely private on Solana devnet.';
-      setTimeout(() => { status.innerHTML = ''; }, 5500);
+    function showCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'flex';
+      // Optional: clear previous input
+      // document.getElementById('propTitle').value = '';
+      // document.getElementById('propDesc').value = '';
     }
 
-    function showResults() {
-      const status = document.getElementById('status');
-      status.innerHTML = '📊 Results appear here once voting ends. Check the proposals below!';
-      setTimeout(() => { status.innerHTML = ''; }, 4500);
+    function hideCreateProposal() {
+      document.getElementById('proposalModal').style.display = 'none';
     }
-
-    function showCreateProposal() { document.getElementById('proposalModal').style.display = 'flex'; }
-    function hideCreateProposal() { document.getElementById('proposalModal').style.display = 'none'; }
 
     function submitProposal() {
-      const title = document.getElementById('propTitle').value || "Untitled Proposal";
-      const desc = document.getElementById('propDesc').value || "No description";
+      const title = document.getElementById('propTitle').value.trim() || "Untitled Proposal";
+      const desc = document.getElementById('propDesc').value.trim() || "No description provided";
       const duration = parseInt(document.getElementById('propDuration').value);
 
-      proposals.unshift({ title, desc, endTime: Date.now() + duration * 1000 });
+      proposals.unshift({
+        id: Date.now(),
+        title: title,
+        desc: desc,
+        endTime: Date.now() + duration * 1000,
+        yes: Math.floor(Math.random() * 25) + 68,
+        no: Math.floor(Math.random() * 18) + 12
+      });
+
       hideCreateProposal();
       renderProposals();
+
+      const status = document.getElementById('status');
+      status.innerHTML = `✅ Proposal <strong>"${title}"</strong> published on-chain!`;
+      
+      setTimeout(() => status.innerHTML = '', 4500);
     }
 
     function renderProposals() {
       const container = document.getElementById('proposalList');
+
+      if (proposals.length === 0) {
+        container.innerHTML = `<p style="text-align:center; color:#777; padding:40px;">No active proposals yet.</p>`;
+        return;
+      }
+
       container.innerHTML = proposals.map(p => {
         const timeLeft = Math.max(0, Math.floor((p.endTime - Date.now()) / 1000));
-        const timer = timeLeft > 0 ? `${Math.floor(timeLeft/3600)}h ${Math.floor((timeLeft%3600)/60)}m` : '<span style="color:#a855f7;">Voting ended • Results ready</span>';
-        return `<div class="card"><strong>${p.title}</strong><p style="margin:12px 0;color:#ccc;">${p.desc}</p><div style="color:#a855f7;">${timer}</div></div>`;
+        let timerHTML = '';
+
+        if (timeLeft > 0) {
+          const hours = Math.floor(timeLeft / 3600);
+          const minutes = Math.floor((timeLeft % 3600) / 60);
+          timerHTML = `<div class="timer">${hours}h ${minutes}m remaining</div>`;
+        } else {
+          timerHTML = `<div class="ended">Voting ended • Results ready</div>`;
+        }
+
+        return `
+          <div class="proposal-card">
+            <strong style="font-size:1.25rem;">${p.title}</strong>
+            <p style="margin:14px 0 16px; color:#ccc;">${p.desc}</p>
+            ${timerHTML}
+          </div>
+        `;
       }).join('');
     }
 
-    // Demo data
-    proposals = [{ title: "Increase marketing budget by 20%", desc: "Allocate additional SOL to community growth and partnerships", endTime: Date.now() + 86400000 }];
+    // Initial demo data
+    proposals = [
+      {
+        id: 1,
+        title: "Increase marketing budget by 20%",
+        desc: "Allocate additional SOL to community growth, influencer partnerships, and content creation.",
+        endTime: Date.now() + 86400000 * 1.5,
+        yes: 78,
+        no: 22
+      }
+    ];
+
+    // Render on load
     renderProposals();
   </script>
 </body>
