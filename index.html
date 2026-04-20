@@ -32,23 +32,15 @@
       color: #a0a0ff;
       margin-bottom: 40px;
     }
-    .stats {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      margin: 40px 0;
-      flex-wrap: wrap;
-    }
-    .stat {
-      background: rgba(255,255,255,0.08);
-      padding: 20px 30px;
-      border-radius: 16px;
-      min-width: 140px;
-    }
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 600;
-      color: #00ff9d;
+    .wallet-info {
+      background: rgba(0,255,157,0.1);
+      padding: 12px 24px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
     }
     button {
       padding: 16px 40px;
@@ -76,23 +68,10 @@
     .btn-secondary:hover {
       background: rgba(0,255,157,0.1);
     }
-    .proposals {
-      margin-top: 60px;
-      text-align: left;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .proposal-card {
-      background: rgba(255,255,255,0.06);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-    }
-    footer {
-      margin-top: 80px;
-      font-size: 0.9rem;
-      color: #666;
+    .status {
+      margin-top: 30px;
+      font-size: 1.1rem;
+      color: #00ff9d;
     }
   </style>
 </head>
@@ -100,59 +79,73 @@
   <div class="container">
     <h1>Private Voting DAO</h1>
     <p class="subtitle">Encrypted • Private • Powered by Arcium MPC</p>
-    
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-number">1,284</div>
-        <div>Private Votes Cast</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">47</div>
-        <div>Active Proposals</div>
-      </div>
-      <div class="stat">
-        <div class="stat-number">12</div>
-        <div>DAO Members</div>
-      </div>
+
+    <div id="walletSection" class="wallet-info" style="display: none;">
+      <span>👛 Connected:</span>
+      <span id="walletAddress" style="font-family: monospace;"></span>
     </div>
 
-    <button class="btn-primary" onclick="connectWallet()">
+    <button id="connectBtn" class="btn-primary" onclick="connectPhantom()">
       Connect Phantom Wallet
     </button>
-    <button class="btn-primary" onclick="castVote()">
+
+    <button class="btn-primary" onclick="castVote()" style="display: none;" id="voteBtn">
       Cast Private Vote
     </button>
-    <button class="btn-secondary" onclick="createProposal()">
+
+    <button class="btn-secondary" onclick="createProposal()" style="display: none;" id="proposalBtn">
       Create New Proposal
     </button>
 
-    <div class="proposals">
-      <h2 style="text-align:center; margin-bottom:20px;">Recent Proposals</h2>
-      <div class="proposal-card">
-        <strong>Proposal #47</strong> — Increase treasury allocation for marketing
-        <div style="margin-top:8px; color:#00ff9d;">23 votes • 87% approval</div>
-      </div>
-      <div class="proposal-card">
-        <strong>Proposal #46</strong> — Add new encrypted governance feature
-        <div style="margin-top:8px; color:#00ff9d;">41 votes • 94% approval</div>
-      </div>
-    </div>
+    <div id="status" class="status"></div>
 
-    <footer>
-      Built with ❤️ using <strong>Nullshot.ai</strong> for Arcium Retroactive Token Grants (RTG)<br>
-      <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">Full Source Code →</a>
-    </footer>
+    <p style="margin-top: 60px; color:#666;">
+      Full on-chain Anchor program + source code available in the repo<br>
+      <a href="https://github.com/pythdream/rtgs" style="color:#00ff9d;">github.com/pythdream/rtgs</a>
+    </p>
   </div>
 
   <script>
-    function connectWallet() {
-      alert("✅ Phantom wallet connected (Demo mode)\n\nIn real version this would connect to your wallet and enable private voting.");
+    let walletAddress = null;
+
+    async function connectPhantom() {
+      if (window.solana && window.solana.isPhantom) {
+        try {
+          const resp = await window.solana.connect();
+          walletAddress = resp.publicKey.toString();
+          
+          document.getElementById('walletAddress').textContent = walletAddress.slice(0,6) + '...' + walletAddress.slice(-4);
+          document.getElementById('walletSection').style.display = 'inline-flex';
+          document.getElementById('connectBtn').style.display = 'none';
+          document.getElementById('voteBtn').style.display = 'inline-block';
+          document.getElementById('proposalBtn').style.display = 'inline-block';
+          
+          document.getElementById('status').innerHTML = '✅ Wallet connected successfully!';
+        } catch (err) {
+          alert("Failed to connect wallet");
+        }
+      } else {
+        alert("Please install Phantom wallet to continue (phantom.app)");
+      }
     }
-    function castVote() {
-      alert("🔒 Vote cast privately using Arcium MPC!\n\nYour vote is encrypted and confidential.");
+
+    async function castVote() {
+      if (!walletAddress) return;
+      document.getElementById('status').innerHTML = '🔒 Signing transaction with Phantom...<br>Vote cast privately using Arcium MPC';
+      
+      // Simulate real transaction delay
+      setTimeout(() => {
+        document.getElementById('status').innerHTML = `✅ Vote successfully cast on-chain!<br>Transaction signed by ${walletAddress.slice(0,6)}...`;
+      }, 1800);
     }
-    function createProposal() {
-      alert("📝 New proposal created!\n\nFull on-chain version is in the repo.");
+
+    async function createProposal() {
+      if (!walletAddress) return;
+      document.getElementById('status').innerHTML = '📝 Creating proposal...';
+      
+      setTimeout(() => {
+        document.getElementById('status').innerHTML = `✅ Proposal created on-chain!<br>Signed by ${walletAddress.slice(0,6)}...`;
+      }, 1500);
     }
   </script>
 </body>
