@@ -9,7 +9,17 @@
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body { font-family: 'Inter', system-ui, sans-serif; }
     .hero-bg {
-      background: radial-gradient(circle at 30% 20%, #0a0a1f 0%, #000 60%);
+      background: radial-gradient(circle at 30% 20%, #1a0f2e 0%, #000 70%);
+      position: relative;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('https://picsum.photos/id/1016/2000/1200') center/cover;
+      opacity: 0.15;
+      z-index: -1;
+      pointer-events: none;
     }
     .glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); }
   </style>
@@ -19,34 +29,29 @@
   <!-- Navbar -->
   <nav class="border-b border-white/10 bg-black/90 backdrop-blur-xl sticky top-0 z-50">
     <div class="max-w-screen-2xl mx-auto px-8 py-6 flex items-center justify-between">
-      <div class="flex items-center gap-x-3">
-        <div class="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">Private Voting DAO</div>
-      </div>
-      <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
-        <a href="#how" class="hover:text-emerald-400 transition-colors">How it Works</a>
-        <a href="#proposals" class="hover:text-emerald-400 transition-colors">Proposals</a>
-        <a onclick="showCreateProposal()" class="hover:text-emerald-400 transition-colors">Create Proposal</a>
+      <div class="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        Private Voting DAO
       </div>
       <button onclick="connectPhantom()" id="navWalletBtn"
-        class="px-6 py-3 bg-emerald-400 hover:bg-emerald-300 transition-colors text-black font-semibold rounded-2xl flex items-center gap-x-2">
+        class="px-6 py-3 bg-purple-400 hover:bg-purple-300 transition-colors text-black font-semibold rounded-2xl flex items-center gap-x-2">
         <span id="walletText">Connect Wallet</span>
       </button>
     </div>
   </nav>
 
   <!-- Hero -->
-  <section class="hero-bg pt-24 pb-16 text-center relative overflow-hidden">
+  <section class="hero-bg pt-24 pb-20 text-center relative overflow-hidden">
     <div class="max-w-screen-2xl mx-auto px-8">
-      <div class="inline-flex items-center gap-x-2 bg-white/10 text-emerald-400 text-sm font-medium px-5 py-2 rounded-full mb-6">
+      <div class="inline-flex items-center gap-x-2 bg-white/10 text-purple-400 text-sm font-medium px-5 py-2 rounded-full mb-6">
         <span class="relative flex h-3 w-3">
-          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-          <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-400"></span>
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-3 w-3 bg-purple-400"></span>
         </span>
         LIVE ON SOLANA DEVNET • POWERED BY ARCIUM MPC
       </div>
       <h1 class="text-6xl md:text-7xl font-bold leading-tight max-w-4xl mx-auto">
         Private Voting.<br>
-        <span class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">Completely Invisible.</span>
+        <span class="bg-gradient-to-r from-purple-400 via-cyan-400 to-blue-400 bg-clip-text text-transparent">Completely Invisible.</span>
       </h1>
       <p class="mt-8 text-xl text-gray-300 max-w-2xl mx-auto">
         Your vote is encrypted end-to-end with Arcium MPC.<br>
@@ -55,16 +60,23 @@
 
       <div class="mt-12 flex flex-wrap justify-center gap-4">
         <button onclick="connectPhantom()" id="heroConnectBtn"
-          class="px-10 py-6 text-2xl font-semibold bg-emerald-400 hover:bg-emerald-300 text-black rounded-3xl flex items-center gap-x-3 transition-all hover:scale-105">
+          class="px-10 py-6 text-2xl font-semibold bg-purple-400 hover:bg-purple-300 text-black rounded-3xl flex items-center gap-x-3 transition-all hover:scale-105">
           Select Wallet
         </button>
         <button onclick="requestFaucet()" 
-          class="px-10 py-6 text-2xl font-semibold border-2 border-emerald-400 rounded-3xl hover:bg-white/5 transition-all hover:scale-105">
+          class="px-10 py-6 text-2xl font-semibold border-2 border-purple-400 rounded-3xl hover:bg-white/5 transition-all hover:scale-105">
           Get Devnet SOL • Faucet
         </button>
       </div>
 
-      <div id="walletInfo" class="hidden mt-8 flex items-center justify-center gap-x-3 text-emerald-400 text-lg">
+      <!-- Navigation moved here -->
+      <div class="mt-16 flex flex-wrap justify-center gap-6 text-lg">
+        <a href="#how" class="px-8 py-4 border border-white/30 hover:border-purple-400 rounded-3xl transition-colors">How it Works</a>
+        <a href="#proposals" class="px-8 py-4 border border-white/30 hover:border-purple-400 rounded-3xl transition-colors">Proposals</a>
+        <a onclick="showCreateProposal()" class="px-8 py-4 border border-white/30 hover:border-purple-400 rounded-3xl transition-colors">Create Proposal</a>
+      </div>
+
+      <div id="walletInfo" class="hidden mt-8 flex items-center justify-center gap-x-3 text-purple-400 text-lg">
         <span>Connected as</span>
         <span id="walletDisplay" class="font-mono bg-white/10 px-6 py-3 rounded-3xl"></span>
       </div>
@@ -121,19 +133,19 @@
         </select>
       </div>
 
-      <button onclick="submitProposal()" class="w-full py-6 text-xl font-semibold bg-emerald-400 text-black rounded-3xl hover:bg-emerald-300 transition">Submit Proposal to DAO</button>
+      <button onclick="submitProposal()" class="w-full py-6 text-xl font-semibold bg-purple-400 text-black rounded-3xl hover:bg-purple-300 transition">Submit Proposal to DAO</button>
       <button onclick="hideCreateProposal()" class="w-full mt-4 py-6 text-gray-400 text-lg">Cancel</button>
     </div>
   </div>
 
   <footer class="bg-black py-20 text-center border-t border-white/10">
-    <p class="text-gray-400">The PriVO application operates on Devnet Solana. It was developed for testing private voting and is not affiliated with the main Arcium development team</p>
+    <p class="text-gray-400">This application operates on Devnet Solana. It was developed for testing private voting and is not affiliated with the main Arcium development team</p>
     <p class="mt-4">
-      <a href="https://github.com/pythdream/rtgs" target="_blank" class="text-emerald-400 hover:underline">Full Source Code on GitHub</a>
+      <a href="https://github.com/pythdream/rtgs" target="_blank" class="text-purple-400 hover:underline">Full Source Code on GitHub</a>
     </p>
     <p class="mt-8 text-lg">
       Follow the project on X: 
-      <a href="https://x.com/FaithDpy" target="_blank" class="text-emerald-400 hover:underline font-medium">@faithDpy</a>
+      <a href="https://x.com/FaithDpy" target="_blank" class="text-purple-400 hover:underline font-medium">@faithDpy</a>
     </p>
   </footer>
 
@@ -165,7 +177,7 @@
     async function castVote() {
       if (!walletAddress) return alert("Please connect wallet first");
       const msg = document.createElement('div');
-      msg.style.cssText = 'position:fixed; bottom:24px; right:24px; background:#10b981; color:black; padding:20px 32px; border-radius:9999px; box-shadow:0 10px 30px rgba(16,185,129,0.4);';
+      msg.style.cssText = 'position:fixed; bottom:24px; right:24px; background:#a855f7; color:black; padding:20px 32px; border-radius:9999px; box-shadow:0 10px 30px rgba(168,85,247,0.4);';
       msg.textContent = '🔒 Asking Phantom to approve vote...';
       document.body.appendChild(msg);
 
@@ -215,7 +227,7 @@
             <h3 class="text-2xl font-semibold">${p.title}</h3>
             <p class="text-gray-400 mt-4">${p.desc}</p>
           </div>
-          <button onclick="castVote()" class="px-10 py-6 bg-emerald-400 text-black font-semibold rounded-3xl whitespace-nowrap hover:scale-105 transition-all">
+          <button onclick="castVote()" class="px-10 py-6 bg-purple-400 text-black font-semibold rounded-3xl whitespace-nowrap hover:scale-105 transition-all">
             Cast Private Vote
           </button>
         </div>
